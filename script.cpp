@@ -2047,7 +2047,7 @@ void draw_spot_lights() {
 	for (auto &actor : actors) {
 		if(actor.hasSpotLight()){
 			//log_to_file("Drawing spot light for actor with index " + std::to_string(i));
-			Vector3 actorPos = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true);
+			Vector3 actorPos = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true,0);
 			SpotLightColor color = actor.getSpotLightColor();
 			int colorR = color.r;
 			int colorG = color.g;
@@ -2150,7 +2150,7 @@ bool move_to_waypoint(Ped ped, Vector3 waypointCoord, bool suppress_msgs) {
 			return true;
 		}
 		else if (PED::IS_PED_ON_FOOT(ped)) {
-			AI::TASK_GO_STRAIGHT_TO_COORD(ped, waypointCoord.x, waypointCoord.y, waypointCoord.z, actor.getWalkingSpeed(), -1, 27.0f, 0.5f);
+			AI::TASK_GO_STRAIGHT_TO_COORD(ped, waypointCoord.x, waypointCoord.y, waypointCoord.z, actor.getWalkingSpeed(), -1, 27.0f, 0.5f,0);
 			log_to_file("move_to_waypoint: Ped (" + std::to_string(ped) + " is walking to waypoint");
 			if (suppress_msgs != true) {
 				set_status_text("Walking to waypoint");
@@ -2206,7 +2206,7 @@ void playback_recording_to_waypoint(Ped ped, Vector3 waypointCoord) {
 
 	}
 	else if (PED::IS_PED_ON_FOOT(ped)) {
-		AI::TASK_GO_STRAIGHT_TO_COORD(ped, waypointCoord.x, waypointCoord.y, waypointCoord.z, 1.0f, -1, 27.0f, 0.5f);
+		AI::TASK_GO_STRAIGHT_TO_COORD(ped, waypointCoord.x, waypointCoord.y, waypointCoord.z, 1.0f, -1, 27.0f, 0.5f,0);
 		log_to_file("playback_recording_to_waypoint: Ped (" + std::to_string(ped) + " is walking to waypoint");
 	}
 }
@@ -2499,7 +2499,7 @@ void action_enter_nearest_vehicle_as_passenger() {
 	log_to_file("enter_nearest_vehicle_as_passenger");
 	set_status_text("Entering as passenger");
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vector3 coord = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+	Vector3 coord = ENTITY::GET_ENTITY_COORDS(playerPed, true,0);
 
 	Vehicle vehicle = VEHICLE::GET_CLOSEST_VEHICLE(coord.x, coord.y, coord.z, 100.0, 0, 71);
 	int nrOfSeats = VEHICLE::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS(vehicle);
@@ -2529,8 +2529,8 @@ void action_explode_nearby_vehicles(boolean setOutOfControl) {
 	log_to_file("action_explode_nearby_vehicle");
 	
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vector3 playerLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true);
-	Vector3 sphereCenter = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+	Vector3 playerLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true,0);
+	Vector3 sphereCenter = ENTITY::GET_ENTITY_COORDS(playerPed, true,0);
 
 	Vehicle pedVehicle = 0;
 	if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, 0)) {
@@ -3033,7 +3033,7 @@ void action_load_actors() {
 			WAIT(0);
 		}
 
-		Vector3 location = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		Vector3 location = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true,0);
 		float startHeading = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 
 		Ped newActorPed = PED::CREATE_PED(4, pedModelHash, location.x, location.y, location.z, startHeading, false, true);
@@ -3713,7 +3713,7 @@ void action_teleport_to_start_locations() {
 				}
 				else if (PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
 					log_to_file("Actor " + std::to_string(actorPed) + " has recording without start location vehicle and is in a vehicle");
-					AI::TASK_LEAVE_VEHICLE(actorPed, PED::GET_VEHICLE_PED_IS_USING(actorPed), 4160);
+					AI::TASK_LEAVE_VEHICLE(actorPed, PED::GET_VEHICLE_PED_IS_USING(actorPed), 4160, 1 << 8);
 					WAIT(500);
 				}
 			}
@@ -4385,7 +4385,7 @@ void action_animation_sync_setup() {
 		return;
 	}
 	else {
-		Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actors[0].getActorPed(), true);
+		Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actors[0].getActorPed(), true,0);
 		action_animation_sync_execute(startLocation,actors, syncAnimations);
 	}
 
@@ -4428,7 +4428,7 @@ void action_animations_preview(){
 	Animation animation = getAnimationForShortcutIndex("1");
 
 
-	Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true);
+	Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true,0);
 	float startHeading = ENTITY::GET_ENTITY_HEADING(actorPed);
 	log_to_file("Start heading is " + std::to_string(startHeading));
 	Vector3 camOffset;
@@ -4860,7 +4860,7 @@ void action_animation_sync_preview() {
 	hasAnimationFilter = false;
 	doAnimationLoop = true;
 
-	Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true);
+	Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true,0);
 	float startHeading = ENTITY::GET_ENTITY_HEADING(actorPed);
 	log_to_file("Start heading is " + std::to_string(startHeading));
 	Vector3 camOffset;
@@ -5448,7 +5448,7 @@ void action_toggle_scene_mode() {
 
 			//store the current location of all actors without a recording, so that we can reset it
 			if (!actor.hasRecording()) {
-				actor.setStartLocation(ENTITY::GET_ENTITY_COORDS(actorPed, true));
+				actor.setStartLocation(ENTITY::GET_ENTITY_COORDS(actorPed, true,0));
 				actor.setStartLocationHeading(ENTITY::GET_ENTITY_HEADING(actorPed));
 				actor.setHasStartLocation(true);
 			}
@@ -5617,7 +5617,7 @@ void update_tick_recording_replay(Actor actor) {
 
 	//check for completion every recordingItem.getTicksDeltaCheckCompletion() ticks
 	if (ticksNow >= recordingPlayback.getTicksLastCheckOfCurrentItem() + recordingItem->getTicksDeltaCheckCompletion()) {
-		Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actorPed, 1);
+		Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actorPed, 1,0);
 		//log_to_file(std::to_string(ticksNow) + " checking for completion ticks "+std::to_string(recordingPlayback.getTicksLastCheckOfCurrentItem() + recordingItem->getTicksDeltaCheckCompletion())+ " getticksdelta " + std::to_string(recordingItem->getTicksDeltaCheckCompletion()));
 		log_to_file(std::to_string(ticksNow) + " checking for completion of item " + recordingItem->toString());
 
@@ -5885,7 +5885,7 @@ void action_copy_recording_to_other_actors(Actor actorCopyFrom) {
 				actor.setRecording(recordingToCopy);
 				actor.setHasRecording(true);
 
-				actor.setStartLocation(ENTITY::GET_ENTITY_COORDS(actorPed, true));
+				actor.setStartLocation(ENTITY::GET_ENTITY_COORDS(actorPed, true,0));
 				actor.setStartLocationHeading(ENTITY::GET_ENTITY_HEADING(actorPed));
 				actor.setHasStartLocation(true);
 				nrCopiedTo++;
@@ -5943,7 +5943,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 		if (PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
 			previousVehicle = PED::GET_VEHICLE_PED_IS_USING(actorPed);
 			float previousVehicleHeading = ENTITY::GET_ENTITY_HEADING(previousVehicle);
-			Vector3 previousVehicleLocation = ENTITY::GET_ENTITY_COORDS(previousVehicle, true);
+			Vector3 previousVehicleLocation = ENTITY::GET_ENTITY_COORDS(previousVehicle, true,0);
 
 			log_to_file("Actor has start location vehicle " + std::to_string(previousVehicle));
 			actor.setStartLocationVehicle(previousVehicle, previousVehicleLocation, previousVehicleHeading);
@@ -5988,7 +5988,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 		Vehicle vehicleParachute = 0;
 
 		//1. Store start location
-		actor.setStartLocation(ENTITY::GET_ENTITY_COORDS(actorPed, true));
+		actor.setStartLocation(ENTITY::GET_ENTITY_COORDS(actorPed, true,0));
 		actor.setStartLocationHeading(ENTITY::GET_ENTITY_HEADING(actorPed));
 		actor.setHasStartLocation(true);
 
@@ -6025,7 +6025,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 				if (!animationTriggerRecorded.isNullAnimationTrigger() && animationTriggerRecorded.isAnimationSequence() && !animationTriggerRecorded.getAnimationSequence().isNullAnimationSequence()) {
 					AnimationSequence animationSeqRecorded = animationTriggerRecorded.getAnimationSequence();
 					
-					actorLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true);
+					actorLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true,0);
 					float heading = ENTITY::GET_ENTITY_HEADING(actorPed);
 					ActorAnimationSequenceRecordingItem recordingItem(ticksSinceStart, DELTA_TICKS, actorIndex, actorPed, actorLocation, heading,  animationSeqRecorded, animationFlag);
 					log_to_file(recordingItem.toString());
@@ -6067,7 +6067,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 					syncedAnimCopy->clearObjectReferences();
 
 					float actorRotation = ENTITY::GET_ENTITY_ROTATION(actorPed, 2).z;
-					actorLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true);
+					actorLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true,0);
 
 					ActorSyncedAnimationRecordingItem recordingItem(ticksSinceStart, DELTA_TICKS, actorIndex, actorPed, getActorPointers(), actorLocation, actorRotation, syncedAnimCopy);
 					
@@ -6109,7 +6109,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 			if (ticksNow - ticksLast >= DELTA_TICKS) {
 				ticksSinceStart = ticksNow - ticksStart;
 
-				actorLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true);
+				actorLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true,0);
 
 				//Section if the actor is currently in a vehicle
 				if (PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
@@ -6170,7 +6170,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 							recordedSpeed = (entitySpeed + lastEntitySpeed) / 2.0f;
 						}
 						//use vehicle location and not actor location
-						Vector3 location = ENTITY::GET_ENTITY_COORDS(actorVeh, true);
+						Vector3 location = ENTITY::GET_ENTITY_COORDS(actorVeh, true,0);
 
 
 						ActorVehicleMovementRecordingItem recordingItem(ticksSinceStart, DELTA_TICKS, actorIndex, actorPed, location, actorVeh,actorVehHeading, recordedSpeed);
@@ -6801,7 +6801,7 @@ void action_copy_player_actions() {
 				nextWaitTicks = 0;
 
 
-				Vector3 actorLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+				Vector3 actorLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true,0);
 
 				if (hud_toggle_key_pressed()) {
 					if (should_display_hud == true) {
@@ -6994,7 +6994,7 @@ void action_copy_player_actions() {
 							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
 								WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), GAMEPLAY::GET_HASH_KEY("gadget_parachute"), 1, 1, 1);
 								//AI::TASK_SKY_DIVE(actorShortcut[i]);
-								AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), lastVehicle, 4160);
+								AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), lastVehicle, 4160, 1 << 8);
 							}
 						}
 					}
@@ -7007,7 +7007,7 @@ void action_copy_player_actions() {
 						log_to_file("Actors should deploy parachute");
 					}
 					else {//isSkydiving = true;
-						Vector3 playerLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true);
+						Vector3 playerLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true,0);
 						float zGroundLevel;
 						GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerLocation.x, playerLocation.y, playerLocation.z, &zGroundLevel,0);
 
@@ -7025,7 +7025,7 @@ void action_copy_player_actions() {
 									//log_to_file("Actor " + std::to_string(actorShortcut[i]) + " should sky dive");
 									//had some issues with them not exiting the vehicle so use TASK_LEAVE_VEHICLE with a teleport flag instead
 									//AI::TASK_SKY_DIVE(actorShortcut[i]);
-									AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), lastVehicle, 4160);
+									AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), lastVehicle, 4160, 1 << 8);
 									WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), GAMEPLAY::GET_HASH_KEY("gadget_parachute"), 1, 1, 1);
 								}
 							}

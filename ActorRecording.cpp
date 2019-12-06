@@ -210,7 +210,7 @@ void ActorOnFootMovementRecordingItem::setWalkSpeed(float walkSpeed)
 
 void ActorOnFootMovementRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
-	AI::TASK_GO_STRAIGHT_TO_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_walkSpeed, -1, m_heading, 0.5f);
+	AI::TASK_GO_STRAIGHT_TO_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_walkSpeed, -1, m_heading, 0.5f,0);
 
 }
 
@@ -322,12 +322,6 @@ VEHICLE_TYPE ActorVehicleRecordingItem::_getVehicleTypeFromNatives()
 	else if (PED::IS_PED_IN_ANY_BOAT(m_actorPed)) {
 		return VEHICLE_TYPE_BOAT;
 	}
-	else if (PED::IS_PED_IN_ANY_SUB(m_actorPed)) {
-		return VEHICLE_TYPE_SUB;
-	}
-	else if (PED::IS_PED_ON_ANY_BIKE(m_actorPed)){
-		return VEHICLE_TYPE_BIKE;
-	}
 	else {
 		return VEHICLE_TYPE_CAR;
 	}
@@ -381,7 +375,7 @@ std::string ActorVehicleExitRecordingItem::toString()
 
 void ActorVehicleExitRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
-	AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), m_vehicle, 0);
+	AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), m_vehicle, 0,1<<8);
 }
 
 bool ActorVehicleExitRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
@@ -915,7 +909,7 @@ std::string ActorCoverAtRecordingItem::toString()
 void ActorCoverAtRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
 	//AI::TASK_SEEK_COVER_FROM_POS (actor.getActorPed(), m_coverPosition.x,m_coverPosition.y,m_coverPosition.z, 5000, 1);
-	Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true);
+	Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true,0);
 	//AI::TASK_SEEK_COVER_TO_COORDS(actor.getActorPed(), currentLocation.x, currentLocation.y, currentLocation.z, m_enterCoverPosition.x, m_enterCoverPosition.y, m_enterCoverPosition.z,  -1, 0);
 	AI::TASK_PUT_PED_DIRECTLY_INTO_COVER(actor.getActorPed(), m_enterCoverPosition.x, m_enterCoverPosition.y, m_enterCoverPosition.z, -1, 0, 0.0, 1, 1, 0, 0);
 }
@@ -974,7 +968,7 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 		WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), m_weapon, 1000, 1, 1);
 	}
 
-	Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true);
+	Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true,0);
 	//GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(currentLocation.x, currentLocation.y, currentLocation.z, m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 100, 1, m_weapon, actor.getActorPed(), 1, 1, 100.0);
 	
 
@@ -1161,7 +1155,7 @@ void ActorSpeakRecordingItem::executeNativesForRecording(Actor actor, std::share
 	AI::TASK_PLAY_ANIM(actor.getActorPed(), "mp_facial", "mic_chatter", 8.0f, -8.0f, -1, ANIMATION_LOOP_FLAG1 | ANIMATION_ALLOW_MOVEMENT_FLAG6, 8.0f, 0, 0, 0);
 
 	if (m_isMovingWhileSpeaking && !PED::IS_PED_IN_ANY_VEHICLE(actor.getActorPed(), 0)) {
-		AI::TASK_GO_STRAIGHT_TO_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_walkSpeed, -1, m_heading, 0.5f);
+		AI::TASK_GO_STRAIGHT_TO_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_walkSpeed, -1, m_heading, 0.5f,0);
 	}
 }
 bool ActorSpeakRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location) {

@@ -507,7 +507,7 @@ void Actor::update_tick_recording_replay(Actor & actor) {
 
 	//check for completion every recordingItem.getTicksDeltaCheckCompletion() ticks
 	if (ticksNow >= recordingPlayback.getTicksLastCheckOfCurrentItem() + recordingItem->getTicksDeltaCheckCompletion()) {
-		Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actorPed, 1);
+		Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actorPed, 1,0);
 		log_to_file(std::to_string(ticksNow) + " checking for completion of item " + recordingItem->toString());
 
 		if (recordingItem->isRecordingItemCompleted(nextRecordingItem, recordingPlayback.getTicksStartCurrentItem(), ticksNow, recordingPlayback.getAttemptsCheckedCompletion(), actor, currentLocation)) {

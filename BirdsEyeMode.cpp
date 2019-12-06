@@ -319,7 +319,7 @@ void BirdsEyeMode::onEnterMode(SCENE_MODE aSceneMode)
 
 	//Find the location of our camera based on the current actor
 	Ped actorPed = PLAYER::PLAYER_PED_ID();
-	Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true);
+	Vector3 startLocation = ENTITY::GET_ENTITY_COORDS(actorPed, true,0);
 	float startHeading = ENTITY::GET_ENTITY_HEADING(actorPed);
 	Vector3 camOffset;
 	camOffset.x = (float)sin((startHeading *PI / 180.0f))*10.0f;

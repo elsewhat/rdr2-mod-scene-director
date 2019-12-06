@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 enum SPOT_LIGHT_TYPE
 {
 	SPOT_LIGHT_NONE = 0,
