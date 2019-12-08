@@ -247,25 +247,6 @@ public:
 	virtual std::string toUserFriendlyName() override;
 };
 
-class ActorVehicleRocketBoostRecordingItem : public ActorVehicleMovementRecordingItem {
-protected:
-public:
-	ActorVehicleRocketBoostRecordingItem(DWORD ticksStart, DWORD ticksDeltaWhenRecorded, int actorIndex, Ped actor, Vector3 location, Vehicle veh, float vehHeading);
-	std::string toString() override;
-	virtual void executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)override;
-	bool isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location) override;
-	virtual std::string toUserFriendlyName() override;
-};
-
-class ActorVehicleParachuteRecordingItem : public ActorVehicleMovementRecordingItem {
-protected:
-public:
-	ActorVehicleParachuteRecordingItem(DWORD ticksStart, DWORD ticksDeltaWhenRecorded, int actorIndex, Ped actor, Vector3 location, Vehicle veh, float vehHeading);
-	std::string toString() override;
-	virtual void executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)override;
-	bool isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location) override;
-	virtual std::string toUserFriendlyName() override;
-};
 
 class ActorAnimationSequenceRecordingItem : public ActorRecordingItem {
 protected:

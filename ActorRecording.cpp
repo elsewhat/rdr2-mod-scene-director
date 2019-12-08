@@ -438,20 +438,12 @@ ActorVehicleMovementRecordingItem::ActorVehicleMovementRecordingItem(DWORD ticks
 	Hash vehicleHash = ENTITY::GET_ENTITY_MODEL(veh);
 
 	bool isInVehicle = PED::IS_PED_IN_ANY_VEHICLE(actor, 0);
-	bool isPedInHeli = VEHICLE::IS_THIS_MODEL_A_HELI(vehicleHash);
-	bool isPedInPlane = VEHICLE::IS_THIS_MODEL_A_PLANE(vehicleHash);
+
 	bool isPedInBoat = VEHICLE::IS_THIS_MODEL_A_BOAT(vehicleHash);
 
 	m_minDistanceBeforeCompleted = 4.0;
 
-	if (isPedInHeli) {
-		m_minDistanceBeforeCompleted = 90.0;
-		m_nrAttemptsBeforeSkipping = 100;
-	}
-	else if (isPedInPlane) {
-		m_minDistanceBeforeCompleted = 100.0;
-	}
-	else if (isPedInBoat) {
+	if (isPedInBoat) {
 		m_minDistanceBeforeCompleted = 60.0;
 	}
 	else if (isInVehicle) {
@@ -499,11 +491,6 @@ void ActorVehicleMovementRecordingItem::executeNativesForRecording(Actor actor, 
 			if (PED::IS_PED_IN_ANY_HELI(actor.getActorPed())) {
 				AI::TASK_VEHICLE_DRIVE_TO_COORD(pedDriver, pedVehicle, m_location.x, m_location.y, m_location.z, m_speedInVehicle, 1, ENTITY::GET_ENTITY_MODEL(pedVehicle), 1, -1.0, -1);
 				log_to_file("playback_recording_to_waypoint: Flying in heli with vehicle:" + std::to_string(pedVehicle) + " with max speed:" + std::to_string(m_speedInVehicle));
-			}
-			else if (PED::IS_PED_IN_ANY_PLANE(actor.getActorPed())) {
-				AI::TASK_PLANE_MISSION(pedDriver, pedVehicle, 0, 0, m_location.x, m_location.y, m_location.z, 4, 30.0, 50.0, -1, m_speedInVehicle, 50);
-				log_to_file("playback_recording_to_waypoint: Flying in plane with vehicle:" + std::to_string(pedVehicle) + " with max speed:" + std::to_string(m_speedInVehicle));
-
 			}
 			else if (PED::IS_PED_IN_ANY_BOAT(actor.getActorPed())) {
 				AI::TASK_BOAT_MISSION(pedDriver, pedVehicle, 0, 0, m_location.x, m_location.y, m_location.z, 4, m_speedInVehicle, 786469, -1.0, 7);
@@ -641,12 +628,13 @@ std::string ActorScenarioRecordingItem::toString()
 
 void ActorScenarioRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
-	if (m_scenario.hasEnterAnim) {
+	//TODO: _0xA917E39F2CEFD215 TASK_START_SCENARIO_IN_PLACE
+	/*if (m_scenario.hasEnterAnim) {
 		AI::TASK_START_SCENARIO_IN_PLACE(actor.getActorPed(), m_scenario.name, -1, 1);
 	}
 	else {
 		AI::TASK_START_SCENARIO_IN_PLACE(actor.getActorPed(), m_scenario.name, -1, 0);
-	}
+	}*/
 }
 
 bool ActorScenarioRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
@@ -690,7 +678,7 @@ std::string ActorAimAtRecordingItem::toString()
 
 void ActorAimAtRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
-	AI::TASK_AIM_GUN_AT_ENTITY(actor.getActorPed(), m_aimedAtEntity, -1, 0);
+	AI::TASK_AIM_GUN_AT_ENTITY(actor.getActorPed(), m_aimedAtEntity, -1, 0,0);
 }
 
 bool ActorAimAtRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
@@ -732,7 +720,7 @@ std::string ActorShootAtEntityRecordingItem::toString()
 
 void ActorShootAtEntityRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
-	AI::TASK_SHOOT_AT_ENTITY(actor.getActorPed(), m_shotAtEntity, -1, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_SINGLE_SHOT"));
+	AI::TASK_SHOOT_AT_ENTITY(actor.getActorPed(), m_shotAtEntity, -1, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_SINGLE_SHOT"),0);
 }
 
 bool ActorShootAtEntityRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
@@ -911,12 +899,12 @@ void ActorCoverAtRecordingItem::executeNativesForRecording(Actor actor, std::sha
 	//AI::TASK_SEEK_COVER_FROM_POS (actor.getActorPed(), m_coverPosition.x,m_coverPosition.y,m_coverPosition.z, 5000, 1);
 	Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true,0);
 	//AI::TASK_SEEK_COVER_TO_COORDS(actor.getActorPed(), currentLocation.x, currentLocation.y, currentLocation.z, m_enterCoverPosition.x, m_enterCoverPosition.y, m_enterCoverPosition.z,  -1, 0);
-	AI::TASK_PUT_PED_DIRECTLY_INTO_COVER(actor.getActorPed(), m_enterCoverPosition.x, m_enterCoverPosition.y, m_enterCoverPosition.z, -1, 0, 0.0, 1, 1, 0, 0);
+	AI::TASK_PUT_PED_DIRECTLY_INTO_COVER(actor.getActorPed(), m_enterCoverPosition.x, m_enterCoverPosition.y, m_enterCoverPosition.z, -1, 0, 0.0, 1, 1, 0, 0,0,0);
 }
 
 bool ActorCoverAtRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
 {
-	if (PED::IS_PED_IN_COVER(actor.getActorPed(), 1)) {
+	if (PED::IS_PED_IN_COVER(actor.getActorPed(), 1,0)) {
 		return true;
 	}else if (ticksNow - ticksStart >= 5000) {
 		return true;
@@ -954,18 +942,20 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 	//CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 
 	//load weapon
+	//TODO: Is this required?
+	/*
 	if (!WEAPON::HAS_WEAPON_ASSET_LOADED(m_weapon))
 	{
 		WEAPON::REQUEST_WEAPON_ASSET(m_weapon, 31, 0);
 		while (!WEAPON::HAS_WEAPON_ASSET_LOADED(m_weapon))
 			WAIT(0);
-	}
+	}*/
 
 	//check the weapon of the actor
 	Hash currentWeapon;
 	WEAPON::GET_CURRENT_PED_WEAPON(actor.getActorPed(), &currentWeapon, 1);
 	if (currentWeapon != m_weapon) {
-		WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), m_weapon, 1000, 1, 1);
+		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(actor.getActorPed(), m_weapon, 1000, 1, 1);
 	}
 
 	Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actor.getActorPed(), true,0);
@@ -973,8 +963,7 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 	
 
 	if (PED::IS_PED_IN_ANY_VEHICLE(actor.getActorPed(), 0)) {
-		//WEAPON::SET_CURRENT_PED_VEHICLE_WEAPON(actor.getActorPed(), m_weapon);
-		//WEAPON::SET_CURRENT_PED_WEAPON(actor.getActorPed(), m_weapon, 1);
+		//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/19
 		PED::SET_PED_SHOOTS_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1);
 		AI::TASK_AIM_GUN_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1000, 1, 1);
 	}
@@ -1322,65 +1311,4 @@ void ActorSyncedAnimationRecordingItem::updatePreviewLocation(Actor* actor,Vecto
 		previewRecording(actor);
 
 	}
-}
-
-ActorVehicleRocketBoostRecordingItem::ActorVehicleRocketBoostRecordingItem(DWORD ticksStart, DWORD ticksDeltaWhenRecorded, int actorIndex, Ped actor, Vector3 location, Vehicle veh, float vehHeading):ActorVehicleMovementRecordingItem(ticksStart, ticksDeltaWhenRecorded, actorIndex, actor, location, veh, vehHeading, 30.0f)
-{
-	m_ticksDeltaCheckCompletion = 10;
-}
-
-std::string ActorVehicleRocketBoostRecordingItem::toString()
-{
-	return ActorRecordingItem::toString() + " ActorVehicleRocketBoostRecordingItem Vehicle " + std::to_string(m_vehicle) ;
-}
-
-void ActorVehicleRocketBoostRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
-{
-	if (VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(m_vehicle)) {
-		VEHICLE::_SET_VEHICLE_ROCKET_BOOST_ACTIVE(m_vehicle, true);
-	}
-	else {
-		log_to_file("Vehicle has no rocket boost");
-	}
-}
-
-bool ActorVehicleRocketBoostRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
-{
-	return true;
-}
-
-std::string ActorVehicleRocketBoostRecordingItem::toUserFriendlyName()
-{
-	return "Boost";
-}
-
-
-ActorVehicleParachuteRecordingItem::ActorVehicleParachuteRecordingItem(DWORD ticksStart, DWORD ticksDeltaWhenRecorded, int actorIndex, Ped actor, Vector3 location, Vehicle veh, float vehHeading) :ActorVehicleMovementRecordingItem(ticksStart, ticksDeltaWhenRecorded, actorIndex, actor, location, veh, vehHeading, 30.0f)
-{
-	m_ticksDeltaCheckCompletion = 10;
-}
-
-std::string ActorVehicleParachuteRecordingItem::toString()
-{
-	return ActorRecordingItem::toString() + " ActorVehicleParachuteRecordingItem Vehicle " + std::to_string(m_vehicle);
-}
-
-void ActorVehicleParachuteRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
-{
-	if (VEHICLE::_HAS_VEHICLE_PARACHUTE(m_vehicle)) {
-		VEHICLE::_SET_VEHICLE_PARACHUTE_ACTIVE(m_vehicle, true);
-	}
-	else {
-		log_to_file("Vehicle has no parachute");
-	}
-}
-
-bool ActorVehicleParachuteRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart, DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
-{
-	return true;
-}
-
-std::string ActorVehicleParachuteRecordingItem::toUserFriendlyName()
-{
-	return "Parachute";
 }

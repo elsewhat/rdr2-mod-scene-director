@@ -308,7 +308,8 @@ void check_player_model()
 			while (!STREAMING::HAS_MODEL_LOADED(model))
 				WAIT(0);
 			PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), model);
-			PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
+			//TODO RDR2: is this required?
+			//PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
 			STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
 
 			// wait until player is ressurected
@@ -339,10 +340,10 @@ void DRAW_TEXT(char* Text, float X, float Y, float S_X, float S_Y, int Font, boo
 
 void store_current_waypoint_for_actor(Ped ped) {
 
-	if (UI::IS_WAYPOINT_ACTIVE()) {
+	if (RADAR::IS_WAYPOINT_ACTIVE()) {
 		log_to_file("store_current_waypoint_for_actor: Looking for ped with id " + std::to_string(ped));
-		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+		int waypointID = RADAR::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		//ignore the first index
 
 		Actor & actor = get_actor_from_ped(ped);
@@ -414,8 +415,11 @@ void ensure_ped_and_vehicle_is_not_deleted(Ped ped) {
 
 
 void ensure_max_driving_ability(Ped ped) {
+	//TODO RDR2: Missing natives
+	/*
 	PED::SET_DRIVER_ABILITY(ped, 1.0);
 	PED::SET_DRIVER_AGGRESSIVENESS(ped, 1.0);
+	*/
 }
 
 void create_relationship_groups() {
@@ -811,7 +815,7 @@ void draw_submenu_animation(int drawIndex) {
 		}
 
 		DRAW_TEXT(animText, 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -826,7 +830,7 @@ void draw_submenu_animation(int drawIndex) {
 	}
 
 	DRAW_TEXT(strdup(("Type: "+ animationFlag.name).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -841,7 +845,7 @@ void draw_submenu_animation(int drawIndex) {
 
 
 	DRAW_TEXT("Add single animation", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100,true,0);
 
 	drawIndex++;
 	submenu_index++;
@@ -856,7 +860,7 @@ void draw_submenu_animation(int drawIndex) {
 
 
 	DRAW_TEXT("Single animation preview", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -870,7 +874,7 @@ void draw_submenu_animation(int drawIndex) {
 	}
 
 	DRAW_TEXT("Test new synch. anim", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 	drawIndex++;
@@ -885,7 +889,7 @@ void draw_submenu_animation(int drawIndex) {
 	}
 
 	DRAW_TEXT("Synchronized animation", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	/*
 	drawIndex++;
@@ -944,7 +948,7 @@ void draw_submenu_world(int drawIndex) {
 		recordReloadText = "Record reload: Yes";
 	}
 	DRAW_TEXT(recordReloadText, 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -961,7 +965,7 @@ void draw_submenu_world(int drawIndex) {
 		}
 
 		DRAW_TEXT("Player chase: Active", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -976,7 +980,7 @@ void draw_submenu_world(int drawIndex) {
 		}
 
 		DRAW_TEXT("Activate chase", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -994,7 +998,7 @@ void draw_submenu_world(int drawIndex) {
 		}
 
 		DRAW_TEXT("Player escort: Active", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -1009,7 +1013,7 @@ void draw_submenu_world(int drawIndex) {
 		}
 
 		DRAW_TEXT("Activate escort", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -1029,7 +1033,7 @@ void draw_submenu_world(int drawIndex) {
 		blackoutText = "Blackout: Active";
 	}
 	DRAW_TEXT(blackoutText, 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 	drawIndex++;
@@ -1048,7 +1052,7 @@ void draw_submenu_world(int drawIndex) {
 		timelapseText = "Timelapse: Active";
 	}
 	DRAW_TEXT(timelapseText, 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1068,7 +1072,7 @@ void draw_submenu_world(int drawIndex) {
 		weatherText = strdup(weatherTextString.c_str());
 	}
 	DRAW_TEXT(weatherText, 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 	drawIndex++;
@@ -1087,7 +1091,7 @@ void draw_submenu_world(int drawIndex) {
 		windText = "Wind: Active";
 	}
 	DRAW_TEXT(windText, 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 
@@ -1111,7 +1115,7 @@ void draw_submenu_save_load(int drawIndex) {
 
 
 	DRAW_TEXT("Save actors", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1126,7 +1130,7 @@ void draw_submenu_save_load(int drawIndex) {
 
 
 	DRAW_TEXT("Load actors", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1141,7 +1145,7 @@ void draw_submenu_save_load(int drawIndex) {
 
 
 	DRAW_TEXT("Save stage lights", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1156,7 +1160,7 @@ void draw_submenu_save_load(int drawIndex) {
 
 
 	DRAW_TEXT("Load stage lights", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1171,7 +1175,7 @@ void draw_submenu_save_load(int drawIndex) {
 
 
 	DRAW_TEXT("Clear stage lights", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1207,7 +1211,7 @@ void draw_submenu_player(int drawIndex) {
 	else {
 		DRAW_TEXT("Record - Scene setup", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 	}
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	if (!actor.hasRecording()) {
 		drawIndex++;
@@ -1222,7 +1226,7 @@ void draw_submenu_player(int drawIndex) {
 		}
 
 		DRAW_TEXT("Record - Scene active", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 
@@ -1239,7 +1243,7 @@ void draw_submenu_player(int drawIndex) {
 		}
 
 		DRAW_TEXT("Test recording", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -1255,7 +1259,7 @@ void draw_submenu_player(int drawIndex) {
 		std::string recordingDelayStr = "Rec. delay: " + std::to_string(actor.getRecordingDelay());
 
 		DRAW_TEXT(strdup(recordingDelayStr.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -1270,7 +1274,7 @@ void draw_submenu_player(int drawIndex) {
 
 
 		DRAW_TEXT("Copy rec. to other actors", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 		
 	}
 
@@ -1290,7 +1294,7 @@ void draw_submenu_player(int drawIndex) {
 		int maxIndex = actor.getRecordingPlayback().getNumberOfRecordedItems();
 		std::string playbackStatus = "Playback: " + std::to_string(currentIndex) + " / " + std::to_string(maxIndex);
 		DRAW_TEXT(strdup(playbackStatus.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 
@@ -1306,7 +1310,7 @@ void draw_submenu_player(int drawIndex) {
 	}
 
 	DRAW_TEXT("Remove from slot", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1320,7 +1324,7 @@ void draw_submenu_player(int drawIndex) {
 
 	std::string healthText = "Health: " +std::to_string(ENTITY::GET_ENTITY_MAX_HEALTH(actor.getActorPed()));
 	DRAW_TEXT(strdup(healthText.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 
@@ -1343,7 +1347,7 @@ void draw_submenu_player(int drawIndex) {
 			vehCosmeticText = vehCosmeticText + "Normal dmg";
 		}
 		DRAW_TEXT(strdup(vehCosmeticText.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 	drawIndex++;
@@ -1358,7 +1362,7 @@ void draw_submenu_player(int drawIndex) {
 
 	std::string relationshipGroupText = "Group: " + actor.getRelationshipGroup().name;
 	DRAW_TEXT(strdup(relationshipGroupText.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 	drawIndex++;
@@ -1379,7 +1383,7 @@ void draw_submenu_player(int drawIndex) {
 	else {
 		DRAW_TEXT("Spot light: None", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 	}
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 	if (actor.hasSpotLight() == true) {
@@ -1395,7 +1399,7 @@ void draw_submenu_player(int drawIndex) {
 
 		std::string spotLightColorText = "Spot color: " + actor.getSpotLightColor().name;
 		DRAW_TEXT(strdup(spotLightColorText.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	}
 
@@ -1415,7 +1419,7 @@ void draw_submenu_player(int drawIndex) {
 	}else {
 		DRAW_TEXT("Speed: Walk", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 	}
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 
 	drawIndex++;
@@ -1436,7 +1440,7 @@ void draw_submenu_player(int drawIndex) {
 	else {
 		DRAW_TEXT("Walk: Normal", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 	}
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1452,7 +1456,7 @@ void draw_submenu_player(int drawIndex) {
 		std::string walkingStyleString = "Driving: " + std::string(actor.getDrivingMode().name);
 		DRAW_TEXT(strdup(walkingStyleString.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 	}
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -1471,7 +1475,7 @@ void draw_submenu_player(int drawIndex) {
 	}
 		
 	DRAW_TEXT(strdup(("Name: " + actorName).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	submenu_max_index = submenu_index;
 }
@@ -1501,7 +1505,7 @@ void draw_menu_synced_anim_preview() {
 		}
 		
 		DRAW_TEXT("Search", 0.01, 0.108 + (0.04)*drawIndex, 0.3, 0.3, 0, doOutlineText, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.065, 0.120 + (0.04)*drawIndex, 0.123, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.065, 0.120 + (0.04)*drawIndex, 0.123, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 		
 		if (menu_active_index == drawIndex) {
 			menu_active_action = MENU_ITEM_SYNCEDPREVIEW_SEARCH;
@@ -1522,7 +1526,7 @@ void draw_menu_synced_anim_preview() {
 			}
 
 			DRAW_TEXT(strdup((strCategory.first + " ("+ std::to_string(strCategory.second) + ")").c_str()), 0.01, 0.108 + (0.04)*drawIndex, 0.3, 0.3, 0, doOutlineText, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.065, 0.120 + (0.04)*drawIndex, 0.123, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.065, 0.120 + (0.04)*drawIndex, 0.123, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			if (menu_active_index == drawIndex) {
 				menu_active_action = (MENU_ITEM)(MENU_ITEM_SYNCEDPREVIEW_CATEGORY1 + indexCategory+1);
@@ -1550,7 +1554,7 @@ void draw_menu_synced_anim_preview() {
 				doOutlineText = true;
 			}
 			DRAW_TEXT(strdup(currentSyncedAnimations[i].getTitle().c_str()), 0.01, 0.108 + (0.04)*drawIndex, 0.3, 0.3, 0, doOutlineText, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.12, 0.120 + (0.04)*drawIndex, 0.233, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.12, 0.120 + (0.04)*drawIndex, 0.233, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			DRAW_TEXT(strdup(("Actors: "+std::to_string(currentSyncedAnimations[i].getNrOfActors())).c_str()), 0.05+0.160, 0.104 + (0.04)*drawIndex, 0.18, 0.18, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 			if (!currentSyncedAnimations[i].isProperSynced()) {
@@ -1574,7 +1578,7 @@ void draw_menu_synced_anim_preview() {
 			doOutlineText = true;
 		}
 		DRAW_TEXT("<- Back", 0.01, 0.108 + (0.04)*drawIndex, 0.3, 0.3, 0, doOutlineText, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.12, 0.120 + (0.04)*drawIndex, 0.233, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.12, 0.120 + (0.04)*drawIndex, 0.233, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 		
 		if (menu_active_index == currentSyncedAnimations.size()) {
 			menu_active_action = MENU_ITEM_SYNCEDPREVIEW_BACK;
@@ -1625,7 +1629,7 @@ void draw_menu() {
 		if (available_slot != -1) {
 			char* slotText = strdup(("Add actor to slot " + std::to_string(available_slot)).c_str());
 			DRAW_TEXT(slotText, 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			if (menu_active_index == drawIndex) {
 				menu_active_action = MENU_ITEM_ADD_TO_SLOT;
@@ -1650,7 +1654,7 @@ void draw_menu() {
 		if (available_slot != -1) {
 			char* slotText = strdup(("Add clone to slot " + std::to_string(available_slot)).c_str());
 			DRAW_TEXT(slotText, 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			if (menu_active_index == drawIndex) {
 				menu_active_action = MENU_ITEM_ADD_CLONE_TO_SLOT;
@@ -1671,10 +1675,10 @@ void draw_menu() {
 	//3. Scene mode
 	if (sceneMode == SCENE_MODE_ACTIVE) {
 		DRAW_TEXT("Scene mode: Active", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	} else {
 		DRAW_TEXT("Scene mode: Setup", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 	if (menu_active_index == drawIndex) {
@@ -1690,7 +1694,7 @@ void draw_menu() {
 
 	//3a. Back to start
 	DRAW_TEXT("Back to start", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_BACK_TO_START;
@@ -1719,7 +1723,7 @@ void draw_menu() {
 
 	}
 	DRAW_TEXT("Save / Load", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	if (menu_active_index == drawIndex) {
@@ -1735,7 +1739,7 @@ void draw_menu() {
 
 	}
 	DRAW_TEXT("Edit scene (BETA)", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	if (menu_active_index == drawIndex) {
@@ -1761,7 +1765,7 @@ void draw_menu() {
 
 	}
 	DRAW_TEXT("World / Options", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	if (menu_active_index == drawIndex) {
@@ -1787,7 +1791,7 @@ void draw_menu() {
 	}
 
 	DRAW_TEXT("Animation (BETA)", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_ANIMATION;
 	}
@@ -1803,7 +1807,7 @@ void draw_menu() {
 	//4. If autopilot is engaged
 	if (is_autopilot_engaged_for_player) {
 		DRAW_TEXT("Autopilot: Active", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 		if (menu_active_index == drawIndex) {
 			menu_active_action = MENU_ITEM_AUTOPILOT;
 		}
@@ -1883,7 +1887,7 @@ void draw_menu() {
 	//7. If firing squad is engaged
 	if (is_firing_squad_engaged) {
 		DRAW_TEXT("Firing squad: Active", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 		if (menu_active_index == drawIndex) {
 			menu_active_action = MENU_ITEM_FIRING_SQUAD;
 		}
@@ -1899,7 +1903,7 @@ void draw_menu() {
 
 	//8. Clone actor
 	DRAW_TEXT("Clone actor", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_CLONE;
 	}
@@ -1929,7 +1933,7 @@ void draw_menu() {
 		}
 
 		DRAW_TEXT(cloneWithVehicleText, 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 		if (menu_active_index == drawIndex) {
 			menu_active_action = MENU_ITEM_CLONE_WITH_VEHICLE;
 		}
@@ -1945,7 +1949,7 @@ void draw_menu() {
 
 	//10. Possess actor
 	DRAW_TEXT("Possess near/aimed", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_POSSESS;
 	}
@@ -1990,7 +1994,7 @@ void draw_menu() {
 
 			char* actorText = strdup((actorName).c_str());
 			DRAW_TEXT(actorText, 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			/* Can't find icon for waypoint, so just using text for now
 			if (GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("CommonMenu") && actorHasWaypoint[i]) {
@@ -2005,7 +2009,7 @@ void draw_menu() {
 			}
 
 			if (actors[i].isActorThisPed(playerActor.getActorPed())) {
-				GRAPHICS::DRAW_RECT(0.93, 0.883 - (0.04)*drawIndex, 0.113, 0.002, 100, 255, 0, 100);				
+				GRAPHICS::DRAW_RECT(0.93, 0.883 - (0.04)*drawIndex, 0.113, 0.002, 100, 255, 0, 100, true, 0);
 			}
 
 
@@ -2053,7 +2057,7 @@ void draw_spot_lights() {
 			int colorG = color.g;
 			int colorB = color.b;
 
-			
+			/* TODO RDR2: Replace ref https://github.com/elsewhat/rdr2-mod-scene-director/issues/9
 			switch (actor.getSpotLightType()) {
 			case SPOT_LIGHT_NONE:
 				break;
@@ -2075,7 +2079,7 @@ void draw_spot_lights() {
 			default:
 				break;
 			}
-
+			*/
 			
 		}
 	}
@@ -2113,17 +2117,6 @@ bool move_to_waypoint(Ped ped, Vector3 waypointCoord, bool suppress_msgs) {
 					if (suppress_msgs != true) {
 						set_status_text("Flying to waypoint");
 					}
-				}
-				else if (PED::IS_PED_IN_ANY_PLANE(ped)) {
-					int height_above_ground = GetPrivateProfileInt("waypoint", "plane_waypoint_height_above_ground",50, config_path);
-					//z dimension is on ground level so add a bit to it
-					AI::TASK_PLANE_MISSION(pedDriver, pedVehicle, 0, 0, waypointCoord.x, waypointCoord.y, waypointCoord.z + height_above_ground, 4, 30.0, 50.0, -1, vehicleMaxSpeed, 50);
-
-					//AI::TASK_VEHICLE_DRIVE_TO_COORD(pedDriver, pedVehicle, waypointCoord.x, waypointCoord.y, 500.0, vehicleMaxSpeed, 1, ENTITY::GET_ENTITY_MODEL(pedVehicle), 1, 5.0, -1);
-					log_to_file("move_to_waypoint: Flying in plane with vehicle:" + std::to_string(pedVehicle) + " with max speed:" + std::to_string(vehicleMaxSpeed) + " height above ground " + std::to_string(height_above_ground));
-					if (suppress_msgs != true) {
-						set_status_text("Flying to waypoint");
-					}
 				}else {
 					//AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(pedDriver, pedVehicle, waypointCoord.x, waypointCoord.y, waypointCoord.z, VEHICLE::_GET_VEHICLE_MAX_SPEED(pedVehicle), 786469, 50.0);
 					float speed = vehicleMaxSpeed; 
@@ -2137,13 +2130,6 @@ bool move_to_waypoint(Ped ped, Vector3 waypointCoord, bool suppress_msgs) {
 					}
 
 				}
-				//initial: Quite aggressive, but stops for redlight (I think)
-				//AI::TASK_VEHICLE_DRIVE_TO_COORD(pedDriver, pedVehicle, waypointCoord.x, waypointCoord.y, waypointCoord.z, 100, 1, ENTITY::GET_ENTITY_MODEL(pedVehicle), 1, 5.0, -1);
-				//slow and follows rules
-				//AI::TASK_VEHICLE_DRIVE_TO_COORD(pedDriver, pedVehicle, waypointCoord.x, waypointCoord.y, waypointCoord.z, 15.0, 0, ENTITY::GET_ENTITY_MODEL(pedVehicle), 786599, 4.0, -1.0);
-
-				//aggresive and drives on redlights
-				//AI::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE(pedDriver, playerVehicle, waypointCoord.x, waypointCoord.y, waypointCoord.z, VEHICLE::_GET_VEHICLE_MAX_SPEED(playerVehicle), 786469, 50.0);
 
 			}
 			
@@ -2185,11 +2171,6 @@ void playback_recording_to_waypoint(Ped ped, Vector3 waypointCoord) {
 			if (PED::IS_PED_IN_ANY_HELI(ped)) {
 				AI::TASK_VEHICLE_DRIVE_TO_COORD(pedDriver, pedVehicle, waypointCoord.x, waypointCoord.y, waypointCoord.z, vehicleMaxSpeed, 1, ENTITY::GET_ENTITY_MODEL(pedVehicle), 1, 5.0, -1);
 				log_to_file("playback_recording_to_waypoint: Flying in heli with vehicle:" + std::to_string(pedVehicle) + " with max speed:" + std::to_string(vehicleMaxSpeed) );
-			}
-			else if (PED::IS_PED_IN_ANY_PLANE(ped)) {
-				AI::TASK_PLANE_MISSION(pedDriver, pedVehicle, 0, 0, waypointCoord.x, waypointCoord.y, waypointCoord.z, 4, 30.0, 50.0, -1, vehicleMaxSpeed, 50);
-				log_to_file("playback_recording_to_waypoint: Flying in plane with vehicle:" + std::to_string(pedVehicle) + " with max speed:" + std::to_string(vehicleMaxSpeed) );
-
 			}
 			else if (PED::IS_PED_IN_ANY_BOAT(ped)) {
 				AI::TASK_BOAT_MISSION(pedDriver, pedVehicle, 0, 0, waypointCoord.x, waypointCoord.y, waypointCoord.z, 4, vehicleMaxSpeed, 786469, -1.0, 7);
@@ -2248,7 +2229,8 @@ void teleport_entity_to_location(Entity entityToTeleport, Vector3 location, bool
 		//AI::CLEAR_PED_TASKS(entityToTeleport);
 	}
 	else if (ENTITY::IS_ENTITY_A_VEHICLE(entityToTeleport)) {
-		VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true,false);
+		//TODO RDR2: Removed last param. Is that correct?
+		VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true);
 		Ped pedDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(entityToTeleport, -1);
 		if (pedDriver >= 1) {
 			//AI::CLEAR_PED_TASKS(pedDriver);
@@ -2272,7 +2254,7 @@ void teleport_player_to_waypoint() {
 
 	}
 
-	if (UI::IS_WAYPOINT_ACTIVE()) {
+	if (RADAR::IS_WAYPOINT_ACTIVE()) {
 		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
 		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
 
@@ -2312,9 +2294,9 @@ void possess_ped(Ped swapToPed) {
 		if (actor.isNullActor()==false && actor.hasWaypoint()) {
 			move_to_waypoint(swapFromPed, actor.getWaypoint(),true);
 		}
-		else if (UI::IS_WAYPOINT_ACTIVE()) {
+		else if (RADAR::IS_WAYPOINT_ACTIVE()) {
 			int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-			Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+			Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 			move_to_waypoint(swapFromPed, waypointCoord, true);
 		}
 
@@ -2588,7 +2570,8 @@ void action_explode_nearby_vehicles(boolean setOutOfControl) {
 		}
 		if (!actorsInVehicle) {
 			if (setOutOfControl) {
-				VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(targetVehicle, true, true);
+				log_to_file("setOutOfControl not supported in rdr ");
+				//VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(targetVehicle, true, true);
 			}
 			else {
 				VEHICLE::EXPLODE_VEHICLE(targetVehicle, true, false);
@@ -2610,7 +2593,7 @@ void check_if_ped_is_passenger_and_has_waypoint(Ped ped) {
 
 			if (pedDriver != ped) {
 				//player is a passenger, check if player has a waypoint
-				if (UI::IS_WAYPOINT_ACTIVE()) {
+				if (RADAR::IS_WAYPOINT_ACTIVE()) {
 					int waypointID;
 					Vector3 waypointCoord;
 
@@ -2618,7 +2601,7 @@ void check_if_ped_is_passenger_and_has_waypoint(Ped ped) {
 					if (waypointID != lastWaypointID) {
 						log_to_file("check_if_ped_is_passenger_and_has_waypoint: New waypoint from passenger");
 
-						waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+						waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 						lastWaypointID = waypointID;
 
 						set_status_text("Driving to passenger waypoint");
@@ -2645,93 +2628,6 @@ void check_if_player_is_passenger_and_has_waypoint() {
 	check_if_ped_is_passenger_and_has_waypoint(playerPed);
 }
 
-/*
-void action_increase_aggressiveness(Ped ped, bool suppress_msgs) {
-	log_to_file("action_increase_aggressiveness");
-	int actorIndex = get_index_for_actor(ped);
-	if (actorIndex != -1) {
-		float currentAggressiveness = actorDriverAgressiveness[actorIndex];
-		if (currentAggressiveness >= 1.0f) {
-			if (suppress_msgs == false) {
-				set_status_text("Already at max aggression");
-			}
-			return;
-		}
-
-		currentAggressiveness = currentAggressiveness + 0.1f;
-		if (currentAggressiveness > 1.0f)
-		{
-			currentAggressiveness = 1.0f;
-		}
-
-		PED::SET_DRIVER_AGGRESSIVENESS(ped, currentAggressiveness);
-		//let's increase ability as well, just for show
-		PED::SET_DRIVER_ABILITY(ped, currentAggressiveness);
-
-		actorDriverAgressiveness[actorIndex] = currentAggressiveness;
-		if (suppress_msgs == false) {
-			set_status_text("Increasing driver aggressiveness " + std::to_string(currentAggressiveness));
-		}
-	}
-	else {
-		set_status_text("Actor must be stored in a slot to increase aggressiveness");
-	}
-	nextWaitTicks = 200;
-}*/
-/*
-void action_decrease_aggressiveness(Ped ped, bool suppress_msgs) {
-	log_to_file("action_decrease_aggressiveness");
-	int actorIndex = get_index_for_actor(ped);
-	if (actorIndex != -1) {
-		float currentAggressiveness = actorDriverAgressiveness[actorIndex];
-
-		if (currentAggressiveness <= 0.0f) {
-			if (suppress_msgs == false) {
-				set_status_text("Already at min aggression");
-			}
-			return;
-		}
-
-
-		currentAggressiveness = currentAggressiveness - 0.1f;
-		if (currentAggressiveness < 0.0f)
-		{
-			currentAggressiveness = 0.0f;
-		}
-
-		PED::SET_DRIVER_AGGRESSIVENESS(ped, currentAggressiveness);
-		//let's increase ability as well, just for show
-		PED::SET_DRIVER_ABILITY(ped, currentAggressiveness);
-
-		actorDriverAgressiveness[actorIndex] = currentAggressiveness;
-		if (suppress_msgs == false) {
-			set_status_text("Decreasing driver aggressiveness to " + std::to_string(currentAggressiveness));
-		}
-	}
-	else {
-		set_status_text("Actor must be stored in a slot to increase aggressiveness");
-	}
-	nextWaitTicks = 200;
-}
-*/
-
-/*
-void action_increase_aggressiveness_for_all_actors() {
-	log_to_file("action_increase_aggressiveness_for_all_actors");
-	set_status_text("Increasing aggressiveness for all actors");
-	for (int i = 1; i < sizeof(actorShortcut) / sizeof(Ped); i++) {
-		action_increase_aggressiveness(actorShortcut[i], true);
-	}
-}
-
-void action_decrease_aggressiveness_for_all_actors() {
-	log_to_file("action_decrease_aggressiveness_for_all_actors");
-	set_status_text("Decreasing aggressiveness for all actors");
-	for (int i = 1; i < sizeof(actorShortcut) / sizeof(Ped); i++) {
-		action_decrease_aggressiveness(actorShortcut[i], true);
-	}
-}
-*/
 
 
 bool swap_to_previous_possessed_key_pressed()
@@ -2755,7 +2651,7 @@ void add_ped_to_slot(int slotIndex, Ped ped) {
 			
 			//Remove old blip
 			int blipIdsToRemove[1] = { actors[slotIndex - 1].getBlipId() };
-			UI::REMOVE_BLIP(blipIdsToRemove);
+			RADAR::REMOVE_BLIP(blipIdsToRemove);
 			//and continue storing the actor
 		}
 
@@ -2768,12 +2664,12 @@ void add_ped_to_slot(int slotIndex, Ped ped) {
 	int blipId = UI::ADD_BLIP_FOR_ENTITY(ped);
 	actors[slotIndex - 1].setBlipId(blipId);
 	//BLIP Sprite for nr1=17, nr9=25
-	UI::SET_BLIP_SPRITE(blipId, 16 + slotIndex);
+	RADAR::SET_BLIP_SPRITE(blipId, 16 + slotIndex);
 
 	//Store current waypoint
-	if (UI::IS_WAYPOINT_ACTIVE()) {
+	if (RADAR::IS_WAYPOINT_ACTIVE()) {
 		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		actors[slotIndex-1].setWaypoint(waypointCoord);
 		actors[slotIndex - 1].setHasWaypoint(true);
 	}
@@ -2844,7 +2740,7 @@ void action_remove_actor_from_index(int pedShortcutsIndex) {
 	else {
 		//remove blip
 		int blipIdsToRemove[1] = { actors[pedShortcutsIndex - 1].getBlipId() };
-		UI::REMOVE_BLIP(blipIdsToRemove);
+		RADAR::REMOVE_BLIP(blipIdsToRemove);
 
 		actors.at(pedShortcutsIndex - 1) = Actor::nullActor();
 	}
@@ -2947,7 +2843,7 @@ void action_reset_scene_director() {
 		}
 
 		int blipIdsToRemove[1] = { actor.getBlipId() };
-		UI::REMOVE_BLIP(blipIdsToRemove);
+		RADAR::REMOVE_BLIP(blipIdsToRemove);
 
 		actor = Actor::nullActor();
 	}
@@ -3466,26 +3362,27 @@ void action_vehicle_chase() {
 					//both are in heli
 					log_to_file("TASK_HELI_CHASE1 - Actor " + std::to_string(actorPed));
 					//last three params are distance to playerVehicle
-					AI::TASK_HELI_CHASE(actorPed, playerVehicle, 0.0, 0.0, -5.0);
+					//TODO RDR2: Any alternative?
+					//AI::TASK_HELI_CHASE(actorPed, playerVehicle, 0.0, 0.0, -5.0);
 				}
 				else if (PED::IS_PED_IN_ANY_HELI(actorPed)) {
 					//if only actor (not player) is in heli
 					log_to_file("TASK_HELI_CHASE2 - Actor " + std::to_string(actorPed));
-					AI::TASK_HELI_CHASE(actorPed, playerVehicle, 0.0, 0.0, -5.0);
+					//AI::TASK_HELI_CHASE(actorPed, playerVehicle, 0.0, 0.0, -5.0);
 				}
 				else if (PED::IS_PED_IN_ANY_PLANE(playerPed) && PED::IS_PED_IN_ANY_PLANE(actorPed)) {
 					//both are in a plane
 					log_to_file("TASK_PLANE_CHASE1 - Actor " + std::to_string(actorPed));
-					AI::TASK_PLANE_CHASE(actorPed, playerVehicle, 0.0, -5.0, -5.0);
+					//AI::TASK_PLANE_CHASE(actorPed, playerVehicle, 0.0, -5.0, -5.0);
 				}
 				else if (PED::IS_PED_IN_ANY_PLANE(actorPed)) {
 					//if only actor (not player) is in plane
 					log_to_file("TASK_PLANE_CHASE2 - Actor " + std::to_string(actorPed));
-					AI::TASK_PLANE_CHASE(actorPed, playerVehicle, 0.0, 0.0, 5.0);
+					//AI::TASK_PLANE_CHASE(actorPed, playerVehicle, 0.0, 0.0, 5.0);
 				}
 				else {//standard vehicle chase
 					log_to_file("TASK_VEHICLE_CHASE - Actor " + std::to_string(actorPed));
-					AI::TASK_VEHICLE_CHASE(actorPed, playerPed);
+					//AI::TASK_VEHICLE_CHASE(actorPed, playerPed);
 				}
 			}
 		}
@@ -3562,9 +3459,9 @@ void action_autopilot_for_player(bool suppressMessage) {
 
 	Actor & actor = get_actor_from_ped(PLAYER::PLAYER_PED_ID());
 	//update the waypoint if one is set currently
-	if (actor.isNullActor()==false && UI::IS_WAYPOINT_ACTIVE()) {
+	if (actor.isNullActor()==false && RADAR::IS_WAYPOINT_ACTIVE()) {
 		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		actor.setWaypoint(waypointCoord);
 		actor.setHasWaypoint(true);
 	}
@@ -3618,9 +3515,9 @@ void action_autopilot_for_player(bool suppressMessage) {
 
 
 void action_set_same_waypoint_for_all_actors() {
-	if (UI::IS_WAYPOINT_ACTIVE()) {
+	if (RADAR::IS_WAYPOINT_ACTIVE()) {
 		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		log_to_file("action_set_same_waypoint_for_all_actors x:" + std::to_string(waypointCoord.x)+ " y:" + std::to_string(waypointCoord.y) + " z:" + std::to_string(waypointCoord.z));
 
 		set_status_text("Waypoint set for all actors");
@@ -3666,7 +3563,7 @@ void action_teleport_to_start_locations() {
 			Vector3 entityToTeleportLocation = actor.getStartLocation();
 			Ped actorPed = actor.getActorPed();
 
-			PED::RESET_PED_VISIBLE_DAMAGE(actorPed);
+			//PED::RESET_PED_VISIBLE_DAMAGE(actorPed);
 			PED::CLEAR_PED_BLOOD_DAMAGE(actorPed);
 			PED::SET_PED_SWEAT(actorPed, 0.0);
 
@@ -3700,7 +3597,7 @@ void action_teleport_to_start_locations() {
 						PED::SET_PED_INTO_VEHICLE(actorPed, entityToTeleport, actor.getStartLocationVehicleSeat());
 					}
 
-					VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true,false);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true);
 					VEHICLE::SET_VEHICLE_UNDRIVEABLE(entityToTeleport, true);
 
 					log_to_file("Before vehicleFirstRecorded");
@@ -3720,7 +3617,7 @@ void action_teleport_to_start_locations() {
 			else {
 				if (PED::IS_PED_IN_ANY_VEHICLE(entityToTeleport, 0)) {
 					entityToTeleport = PED::GET_VEHICLE_PED_IS_USING(entityToTeleport);
-					VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true,false);
+					VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true);
 					VEHICLE::SET_VEHICLE_UNDRIVEABLE(entityToTeleport, true);
 				}
 			}
@@ -3754,8 +3651,7 @@ void action_teleport_to_start_locations() {
 			if (PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
 				Vehicle teleportedVehicle = PED::GET_VEHICLE_PED_IS_USING(actorPed);
 				VEHICLE::SET_VEHICLE_UNDRIVEABLE(teleportedVehicle, true);
-				VEHICLE::SET_VEHICLE_ALARM(teleportedVehicle, true);
-				VEHICLE::START_VEHICLE_ALARM(teleportedVehicle);
+
 			}
 
 			if (actor.hasRecording()) {
@@ -3814,7 +3710,6 @@ void action_teleport_to_start_locations() {
 				log_to_file("Setting vehicle back to drivable for actor " + std::to_string(actorPed));
 				Vehicle teleportedVehicle = PED::GET_VEHICLE_PED_IS_USING(actorPed);
 				VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(teleportedVehicle);
-				VEHICLE::SET_VEHICLE_ALARM(teleportedVehicle, false);
 				VEHICLE::SET_VEHICLE_UNDRIVEABLE(teleportedVehicle, false);
 				VEHICLE::SET_VEHICLE_DOORS_SHUT(teleportedVehicle, true);
 			}
@@ -3824,7 +3719,6 @@ void action_teleport_to_start_locations() {
 	possess_ped(orgPed);
 	if (PED::IS_PED_IN_ANY_VEHICLE(orgPed, 0)) {
 		Vehicle teleportedVehicle = PED::GET_VEHICLE_PED_IS_USING(orgPed);
-		VEHICLE::SET_VEHICLE_ALARM(teleportedVehicle, false);
 		VEHICLE::SET_VEHICLE_UNDRIVEABLE(teleportedVehicle, false);
 		VEHICLE::SET_VEHICLE_DOORS_SHUT(teleportedVehicle, true);
 	}
@@ -3835,7 +3729,7 @@ void action_teleport_to_start_locations() {
 			Ped actorPed = actor.getActorPed();
 			if (actor.isNullActor() == false && actor.hasStartLocation() && PED::IS_PED_FALLING(actorPed) ) {
 				log_to_file(std::to_string(actorPed) + " is falling or dead after we had dead peds. Trying to teleport back to top");
-				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed));
+				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0));
 				Vector3 location = actor.getStartLocation();
 				location.z = location.z + 2.5f;
 				teleport_entity_to_location(actorPed, location, true);
@@ -3843,7 +3737,7 @@ void action_teleport_to_start_locations() {
 			else if (actor.isNullActor() == false && actor.hasStartLocation() && (ENTITY::IS_ENTITY_DEAD(actorPed) || PED::IS_PED_DEAD_OR_DYING(actorPed, true))) {
 				log_to_file(std::to_string(actorPed) + " is still dead. Real desparte attempts at reviving");
 
-				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed));
+				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0));
 				Vector3 location = actor.getStartLocation();
 				location.z = location.z + 2.2f;
 				int ressurectTries = 0;
@@ -3894,12 +3788,13 @@ void action_toggle_timelapse() {
 
 void action_toggle_blackout() {
 	if (is_world_blackout == false) {
-		GRAPHICS::_SET_BLACKOUT(true);
+		//TODO RDR2 : Alternative to black out ?
+		//GRAPHICS::_SET_BLACKOUT(true);
 		is_world_blackout = true;
 		set_status_text("Blackout of world started");
 	}
 	else {
-		GRAPHICS::_SET_BLACKOUT(false);
+		//GRAPHICS::_SET_BLACKOUT(false);
 		is_world_blackout = false;
 		set_status_text("Blackout of world stopped");
 	}
@@ -3928,7 +3823,8 @@ void action_next_weather() {
 	else {
 		Weather weather = gtaWeatherTypes[index_weather];
 
-		GAMEPLAY::SET_WEATHER_TYPE_NOW_PERSIST(weather.id);
+		//GAMEPLAY::SET_WEATHER_TYPE__SET_WEATHER_TYPE_TRANSITIONNOW_PERSIST(weather.id);
+		//TODO RDR2: Use _SET_WEATHER_TYPE_TRANSITION instead
 		//set_status_text("Weather is now: " + std::string(weather.id));
 	}
 }
@@ -3959,7 +3855,7 @@ void action_toggle_vehicle_cosmetic() {
 		if (actor.hasVehicleNoDamage()) {
 			actor.setVehicleNoDamage(false);
 			ENTITY::SET_ENTITY_INVINCIBLE(pedVehicle, false);
-			ENTITY::SET_ENTITY_PROOFS(pedVehicle, 0, 0, 0, 0, 0, 0, 0, 0);
+			ENTITY::SET_ENTITY_PROOFS(pedVehicle, 0, 0);
 			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(pedVehicle, 1);
 			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(pedVehicle, 1);
 			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(pedVehicle, 1);
@@ -3967,7 +3863,7 @@ void action_toggle_vehicle_cosmetic() {
 		else {
 			actor.setVehicleNoDamage(true);
 			ENTITY::SET_ENTITY_INVINCIBLE(pedVehicle, false);
-			ENTITY::SET_ENTITY_PROOFS(pedVehicle, 1, 1, 1, 1, 1, 1, 1, 1);
+			ENTITY::SET_ENTITY_PROOFS(pedVehicle, 1, 1);
 			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(pedVehicle, 0);
 			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(pedVehicle, 0);
 			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(pedVehicle, 0);	
@@ -3980,14 +3876,14 @@ void action_toggle_vehicle_cosmetic() {
 void action_toggle_wind() {
 	if (is_wind_active ==false) {
 		is_wind_active = true;
-		GAMEPLAY::SET_WIND(1.0);
+		//GAMEPLAY::SET_WIND(1.0);
 		GAMEPLAY::SET_WIND_SPEED(11.99f);
 		GAMEPLAY::SET_WIND_DIRECTION(ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()));
 		set_status_text("Strong winds activated");
 	}
 	else {
 		is_wind_active = false;
-		GAMEPLAY::SET_WIND(0.0);
+		//GAMEPLAY::SET_WIND(0.0);
 		GAMEPLAY::SET_WIND_SPEED(0.0);
 		set_status_text("Winds back to normal");
 	}
@@ -4006,6 +3902,7 @@ void action_next_walking_style() {
 	else {
 		ClipSet walkingStyle = gtaWalkingStyles[index_walking_style];
 		if (STREAMING::HAS_CLIP_SET_LOADED(walkingStyle.id)) {
+			//TODO RDR2: How to set movement style?  https://github.com/elsewhat/rdr2-mod-scene-director/issues/12
 			PED::SET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), walkingStyle.id, 1.0);
 			actor.setHasWalkingStyle(true);
 			actor.setWalkingStyle(walkingStyle);
@@ -4171,7 +4068,8 @@ void action_animation_single() {
 			if (animationPrevious.shortcutIndex != 0) {
 				AI::STOP_ANIM_TASK(actorPed, animationPrevious.animLibrary, animationPrevious.animName, -4.0);
 			}
-			PED::PLAY_FACIAL_ANIM(actorPed, animation.animLibrary, animation.animName);
+			//PED::PLAY_FACIAL_ANIM(actorPed, animation.animLibrary, animation.animName);
+			log_to_file("PED::PLAY_FACIAL_ANIM not supported in rdr2");
 		}
 		else {
 			AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, -1, animationFlag.id, 8.0f, 0, 0, 0);
@@ -4304,7 +4202,9 @@ void action_animation_sequence_add() {
 }
 
 void action_animation_sync_execute(Vector3 sceneLocation, std::vector<Actor>  syncActors, std::vector<Animation>  syncAnimations) {
-	log_to_file("action_animation_sync_execute");
+	log_to_file("action_animation_sync_execute CREATE_SYNCHRONIZED_SCENE not supported in rdr2");
+	return;
+	/*https://github.com/elsewhat/rdr2-mod-scene-director/issues/13
 	if (syncActors[0].isNullActor() || syncActors[1].isNullActor()) {
 		set_status_text("Must have at least two actors");
 		return;
@@ -4334,6 +4234,7 @@ void action_animation_sync_execute(Vector3 sceneLocation, std::vector<Actor>  sy
 
 
 	PED::SET_SYNCHRONIZED_SCENE_PHASE(scene, 0.0);
+	*/
 }
 
 void action_animation_sync_setup() {
@@ -4555,6 +4456,7 @@ void action_animations_preview(){
 					CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 					if (IsKeyDown(VK_MENU) && IsKeyDown(0x43)) {//stop preview
 						//reset cam
+						//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
 						CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
 						return;
 					}
@@ -4737,75 +4639,9 @@ void action_animations_preview(){
 	}
 
 	//reset cam
+	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
 	CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
 
-	/*
-	for (auto animation : animations) {
-		if (animation.shortcutIndex != 0) {
-			STREAMING::REQUEST_ANIM_DICT(animation.animLibrary);
-			DWORD ticksStart = GetTickCount();
-			bool hasLoaded = true;
-			while (!STREAMING::HAS_ANIM_DICT_LOADED(animation.animLibrary))
-			{
-				WAIT(0);
-				if (GetTickCount() > ticksStart + 5000) {
-					//log_to_file("Ticks overflow");
-					hasLoaded = false;
-					break;
-				}
-			}
-
-			if (hasLoaded) {
-				int duration = 500;
-				AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, duration, true, 8.0f, 0, 0, 0);
-				ticksStart = GetTickCount();
-				while (!ENTITY::IS_ENTITY_PLAYING_ANIM(actorPed, animation.animLibrary, animation.animName, 3)) {
-					WAIT(0);
-					if (GetTickCount() > ticksStart + 5000) {
-						//duration will be 0 if it's not loaded
-						//log_to_file("Ticks overflow2");
-						break;
-					}
-				}
-				duration = (int)ENTITY::GET_ENTITY_ANIM_TOTAL_TIME((Entity)actorPed, animation.animLibrary, animation.animName);
-				log_to_file(animation.strShortcutIndex + " " + std::string(animation.animLibrary) + " " + std::string(animation.animName) + " " + std::to_string(duration));
-			}
-			else {
-				log_to_file(animation.strShortcutIndex + " " + std::string(animation.animLibrary) + " " + std::string(animation.animName) + " " + std::to_string(0));
-			}
-		}
-	}*/
-	/*
-	GAMEPLAY::DISPLAY_ONSCREEN_KEYBOARD(true, "FMMC_KEY_TIP8", "", "", "", "", "", 6);
-
-	while (GAMEPLAY::UPDATE_ONSCREEN_KEYBOARD() == 0) {
-		WAIT(0);
-	}
-
-	char * keyboardValue = GAMEPLAY::GET_ONSCREEN_KEYBOARD_RESULT();
-	std::string strAnimationIndex = std::string(keyboardValue);
-	log_to_file("Got keyboard value " + strAnimationIndex);
-
-	Animation animation = getAnimationForShortcutIndex(keyboardValue);
-	if (animation.shortcutIndex != 0) {
-		STREAMING::REQUEST_ANIM_DICT(animation.animLibrary);
-
-		//const System::DateTime endtime = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, 1000);
-
-		while (!STREAMING::HAS_ANIM_DICT_LOADED(animation.animLibrary))
-		{
-			WAIT(0);
-		}
-
-		int duration = 500;
-		AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, duration, true, 8.0f, 0, 0, 0);
-		while (!ENTITY::IS_ENTITY_PLAYING_ANIM(actorPed, animation.animLibrary, animation.animName, 3)) {
-			WAIT(0);
-		}
-		duration = ENTITY::GET_ENTITY_ANIM_TOTAL_TIME((Entity)actorPed, animation.animLibrary, animation.animName);
-		log_to_file("Animation" + std::string(animation.animLibrary) + "  duration  " + std::to_string(duration));
-	}
-	*/
 
 }
 void action_animation_sync_play(SyncedAnimation syncedAnimation, bool clearObjectReferences) {
@@ -4883,6 +4719,7 @@ void action_animation_sync_preview() {
 		cameraHandle = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", camLocation.x, camLocation.y, camLocation.z, 0.0, 0.0, 0.0, 40.0, 1, 2);
 		CAM::ATTACH_CAM_TO_ENTITY(cameraHandle, actorPed, camOffset.x, camOffset.y, camOffset.z, true);
 		CAM::POINT_CAM_AT_ENTITY(cameraHandle, actorPed, 0.0f, 0.0f, 0.0f, true);
+		//TODO RDR2 https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
 		CAM::RENDER_SCRIPT_CAMS(true, 0, 3000, 1, 0);
 	}
 
@@ -4978,6 +4815,7 @@ void action_animation_sync_preview() {
 				if (!currentSyncedAnimation.isNull()) {
 					currentSyncedAnimation.cleanupAfterExecution(true, true);
 				}
+				//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
 				CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
 				return;
 			}
@@ -5053,192 +4891,10 @@ void action_animation_sync_preview() {
 		WAIT(0);
 	}
 
-/*
-	for (int i = 0; i < syncedAnimations.size(); i++) {
-		SyncedAnimation syncedAnimation = syncedAnimations[i];
 
-		if (hasAnimationFilter && !syncedAnimation.matchesFilter(animationFilterStr)) {
-			continue;
-		}
-
-
-		DRAW_TEXT(strdup(syncedAnimation.toString().c_str()), 0.0, 0.0, 0.5, 0.5, 0, true, false, false, false, 255, 255, 255, 200);
-
-		//std::vector<GTAObject>(),
-		syncedAnimation.executeSyncedAnimation(getActorPointers(),  true, Vector3(), doAnimationLoop,true,0.0f);
-		DWORD mainTickLast = GetTickCount();
-
-		while (!syncedAnimation.isCompleted()) {
-			DWORD ticksNow= GetTickCount();
-			WAIT(0);
-			draw_instructional_buttons_animation_sync_preview();
-			draw_spot_lights();
-			DRAW_TEXT(strdup(syncedAnimation.toString().c_str()), 0.0, 0.0, 0.5, 0.5, 0, true, false, false, false, 255, 255, 255, 255);
-
-			if (nextWaitTicks == 0 || GetTickCount() - mainTickLast >= nextWaitTicks) {
-			//if (ticksNow >= ticksLastMenu + 100) {
-				if (menu_up_key_pressed()) {
-					menu_alt_action_up();
-				}
-				else if (menu_down_key_pressed()) {
-					menu_alt_action_down();
-				}
-				else if (menu_left_key_pressed()) {
-					menu_action_left();
-				}
-				else if (menu_right_key_pressed()) {
-					menu_action_right();
-				}
-				else if (menu_select_key_pressed()) {
-					menu_action_select();
-				}
-				else if (menu_delete_key_pressed()) {
-					menu_action_delete();
-				}
-			}
-
-			draw_menu_synced_anim_preview();
-
-
-			CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
-			if (IsKeyDown(0x43)) {//stop preview
-				syncedAnimation.cleanupAfterExecution(true, true);
-				CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
-				return;
-			}
-			else if (IsKeyDown(0x4E)) {//next animation
-				if (hasAnimationFilter) {
-					for (int j = i + 1; j < syncedAnimations.size(); j++) {
-						if (syncedAnimations[j].matchesFilter(animationFilterStr)) {
-							i = j;
-							WAIT(150);
-							break;
-						}
-					}
-				}
-				else {
-					WAIT(150);
-				}
-				break;
-			}
-			else if (IsKeyDown(0x42)) {//previous animation
-				if (hasAnimationFilter) {
-					for (int j = i - 2; j >= 0; j--) {
-						if (syncedAnimations[j].matchesFilter(animationFilterStr)) {
-							i = j;
-							WAIT(150);
-							break;
-						}
-					}
-				}
-				else {
-					i = i - 2;
-					WAIT(150);
-				}
-
-				break;
-			}
-			else if (IsKeyDown(0x4C)) {//previous animation
-
-				if (doAnimationLoop) {
-					doAnimationLoop = false;
-					syncedAnimation.setLooping(doAnimationLoop);
-					set_status_text("Stopped looping");
-
-				}
-				else {
-					doAnimationLoop = true;
-					syncedAnimation.setLooping(doAnimationLoop);
-					set_status_text("Now looping current animation");
-				}
-
-				WAIT(150);
-			}
-			else if (IsKeyDown(VK_LEFT)) {//previous animation
-				currentCamHeading += 10.0;
-				if (currentCamHeading >= 359.9) {
-					currentCamHeading = 0.0;
-				}
-
-				camOffset.x = (float)sin((currentCamHeading *PI / 180.0f))*6.0f;
-				camOffset.y = (float)cos((currentCamHeading *PI / 180.0f))*6.0f;
-				if (customCamera) {
-					CAM::ATTACH_CAM_TO_ENTITY(cameraHandle, actorPed, camOffset.x, camOffset.y, camOffset.z, true);
-					WAIT(100);
-				}
-			}
-			else if (IsKeyDown(VK_RIGHT)) {//previous animation
-				currentCamHeading -= 10.0;
-				if (currentCamHeading < 0.0) {
-					currentCamHeading += 360.0;
-				}
-
-				camOffset.x = (float)sin((currentCamHeading *PI / 180.0f))*6.0f;
-				camOffset.y = (float)cos((currentCamHeading *PI / 180.0f))*6.0f;
-				if (customCamera) {
-					CAM::ATTACH_CAM_TO_ENTITY(cameraHandle, actorPed, camOffset.x, camOffset.y, camOffset.z, true);
-					WAIT(100);
-				}
-
-
-			}
-			else if (IsKeyDown(0x46)) {//F key
-				set_status_text("Enter text to filter animations on. Operators AND OR NOT can be used");
-				animationFilterStr = actionInputString(50);
-				if (!animationFilterStr.empty()) {
-					int nrMatches = 0;
-					for (int j = 0; j < syncedAnimations.size(); j++) {
-						if (syncedAnimations[j].matchesFilter(animationFilterStr)) {
-							nrMatches++;
-						}
-					}
-					if (nrMatches == 0) {
-						set_status_text("Found no animations matching filter " + animationFilterStr);
-						hasAnimationFilter = false;
-					}
-					else {
-						set_status_text("Found " + std::to_string(nrMatches) + " animations matching filter ");
-						i = 0;
-						hasAnimationFilter = true;
-						doAnimationLoop = true;
-						break;
-					}
-				}
-				else {
-					hasAnimationFilter = false;
-					break;
-				}
-			}
-			else if (IsKeyDown(VK_ADD)) {//+
-				log_to_file("UP");
-				syncedAnimation.setDeltaZ(syncedAnimation.getDeltaZ() + 0.1);
-				syncedAnimation.cleanupAfterExecution(true, true);
-				syncedAnimation.executeSyncedAnimation(getActorPointers(), true, Vector3(), doAnimationLoop, true,0.0f);
-
-				WAIT(150);
-			}
-			else if (IsKeyDown(VK_SUBTRACT)) {//-
-				log_to_file("Down");
-				syncedAnimation.setDeltaZ(syncedAnimation.getDeltaZ() - 0.1);
-				syncedAnimation.cleanupAfterExecution(true, true);
-				syncedAnimation.executeSyncedAnimation(getActorPointers(), true, Vector3(), doAnimationLoop, true, 0.0f);
-				WAIT(150);
-			}
-			else if (IsKeyDown(0x41)) {//A
-				log_to_file("Adding " + syncedAnimation.toString());
-				action_animation_sync_add(syncedAnimation);
-				set_status_text("Added synchronized animation to shortcut");
-				WAIT(150);
-			}
-
-		}
-		//cleanup objects and teleport back to start
-		syncedAnimation.cleanupAfterExecution(true,true);
-
-	}
-	*/
 
 	//reset cam
+	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
 	CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
 }
 
@@ -5381,9 +5037,9 @@ void check_if_explode_or_outofcontrol_nearby_vehicle_key_pressed (){
 }
 
 void reset_ignore_player() {
-	log_to_file("Setting PLAYER::SET_EVERYONE_IGNORE_PLAYER and PLAYER::SET_POLICE_IGNORE_PLAYER to false");
+	log_to_file("Setting PLAYER::SET_EVERYONE_IGNORE_PLAYER");
 	
-	PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
+	//PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
 	PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
 
 }
@@ -5392,6 +5048,7 @@ void action_add_prop_to_actor(Actor actor, ActorProp actorProp) {
 	Ped actorPed = actor.getActorPed();
 
 	Vector3 position = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(actorPed, 1.0, 2.0, 0.0);
+	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/15
 	STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY(actorProp.propId));
 	DWORD ticksStart = GetTickCount();
 	
@@ -5475,9 +5132,8 @@ void action_toggle_scene_mode() {
 			//assign_actor_to_relationship_group(actorPed, getDefaultRelationshipGroup());
 			//move the actor if he has a waypoint and if he's not the player
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(actorPed, true);
-			//AI::TASK_STAND_STILL(actorShortcut[i], -1);
+			//TODO RDR2: https://github.com/Saltyq/ScriptHookRDR2DotNet/blob/5494222ee3494d18c104f3a0fb42a267244cd246/source/scripting_v3/RDR2/Entities/Peds/Tasks.cs#L376
 			AI::CLEAR_PED_TASKS(actorPed);
-			//AI::TASK_PAUSE(actorShortcut[i], 500);
 		}
 	}
 	nextWaitTicks = 500;
@@ -5548,117 +5204,6 @@ void action_set_recording_delay(Actor & actor) {
 
 
 }
-
-
-/*Moved to Actor class
-void update_tick_recording_replay(Actor actor) {
-	Ped actorPed = actor.getActorPed();
-	DWORD ticksNow = GetTickCount();
-
-	//get the recording playback controller. Remember that this is by value and must be updated back to the actor
-	ActorRecordingPlayback & recordingPlayback = actor.getRecordingPlayback();
-
-	std::shared_ptr<ActorRecordingItem> recordingItem = actor.getRecordingAt(recordingPlayback.getRecordedItemIndex());
-	std::shared_ptr<ActorRecordingItem> nextRecordingItem;
-	if (!recordingPlayback.isCurrentRecordedItemLast()) {
-		nextRecordingItem = actor.getRecordingAt(recordingPlayback.getRecordedItemIndex() + 1);
-	}
-	std::shared_ptr<ActorRecordingItem> previousRecordingItem;
-	if (recordingPlayback.getRecordedItemIndex()>=1) {
-		previousRecordingItem = actor.getRecordingAt(recordingPlayback.getRecordedItemIndex() -1);
-	}
-
-
-	if (!recordingPlayback.hasTeleportedToStartLocation()) {
-		log_to_file("update_tick_recording_replay - Initiate telport to start location for all actors");
-		action_teleport_to_start_locations();
-		
-		//update setting for all actors
-		for (auto & actor : actors) {
-			if (actor.isNullActor() == false && actor.isCurrentlyPlayingRecording()) {
-				ActorRecordingPlayback & otherActorRecordingPlayback = actor.getRecordingPlayback();
-				otherActorRecordingPlayback.setHasTeleportedToStartLocation(ticksNow);
-
-				if (actor.hasRecordingWithGunFire() && actor.isActorThisPed(PLAYER::PLAYER_PED_ID())) {
-					set_status_text("Switch actor in order for gun fire recording to be playbacked correctly!");
-				}
-			}
-		}
-
-		recordingPlayback.setHasTeleportedToStartLocation(ticksNow);
-		return;
-	}
-
-	//special handling for the first item. Wait untill we start it
-	if (!recordingPlayback.getHasFirstItemPlayback()) {
-		
-		if (ticksNow >= recordingPlayback.getTicksTeleportedToStartLocation() + 2000) {
-			DWORD ticksPlaybackStart = recordingPlayback.getTicksPlaybackStarted();
-			DWORD ticksDeltaStartFirst = recordingItem->getTicksAfterRecordStart();
-
-			if (ticksNow < ticksPlaybackStart + ticksDeltaStartFirst + actor.getRecordingDelay()) {
-				return;
-			}
-			else {
-				recordingPlayback.setHasFirstItemPlayback(true);
-				recordingPlayback.setTicksLastCheckOfCurrentItem(ticksNow);
-				log_to_file("Starting first recording item");
-
-				recordingItem->executeNativesForRecording(actor, nextRecordingItem, previousRecordingItem);
-				
-				//try to avoid flee and other actions
-				PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(actor.getActorPed(), true);
-			}
-		}
-		else {
-			return;
-		}
-	}
-
-	//check for completion every recordingItem.getTicksDeltaCheckCompletion() ticks
-	if (ticksNow >= recordingPlayback.getTicksLastCheckOfCurrentItem() + recordingItem->getTicksDeltaCheckCompletion()) {
-		Vector3 currentLocation = ENTITY::GET_ENTITY_COORDS(actorPed, 1,0);
-		//log_to_file(std::to_string(ticksNow) + " checking for completion ticks "+std::to_string(recordingPlayback.getTicksLastCheckOfCurrentItem() + recordingItem->getTicksDeltaCheckCompletion())+ " getticksdelta " + std::to_string(recordingItem->getTicksDeltaCheckCompletion()));
-		log_to_file(std::to_string(ticksNow) + " checking for completion of item " + recordingItem->toString());
-
-
-
-
-
-
-		if (recordingItem->isRecordingItemCompleted(nextRecordingItem,recordingPlayback.getTicksStartCurrentItem(), ticksNow, recordingPlayback.getAttemptsCheckedCompletion() , actor, currentLocation)) {
-			//execute any post actions (normally empty)
-			recordingItem->executeNativesAfterRecording(actor);
-
-			//skip to next normally. But if last or ped is dead, skip to last
-			if (recordingPlayback.isCurrentRecordedItemLast() || ENTITY::IS_ENTITY_DEAD(actorPed)) {
-				recordingPlayback.setPlaybackCompleted();
-				actor.stopReplayRecording();
-			} 
-			else {
-				recordingPlayback.nextRecordingItemIndex(GetTickCount());
-				recordingItem = actor.getRecordingAt(recordingPlayback.getRecordedItemIndex());
-				log_to_file("Starting next recorded item " + std::to_string(recordingPlayback.getRecordedItemIndex())+ " : " + recordingItem->toString());
-				recordingItem->executeNativesForRecording(actor, nextRecordingItem, previousRecordingItem);
-
-				//try to avoid flee and other actions
-				//PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(actor.getActorPed(), true);
-			}
-		}
-		else {
-			recordingPlayback.setTicksLastCheckOfCurrentItem(ticksNow);
-			recordingPlayback.incrementAttempstCheckedCompletion();
-		}
-	}
-
-	//Logic for checking if current recording is ActorShootAtByImpactRecordingItem
-	//std::shared_ptr<ActorShootAtByImpactRecordingItem> checkIfCurrentShootingRecordingItem = std::dynamic_pointer_cast<ActorShootAtByImpactRecordingItem>(recordingItem);
-	//if (checkIfCurrentShootingRecordingItem) {
-	//	log_to_file("Blocking mouse movements during ActorShootAtByImpactRecordingItem");
-	//	CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(1);
-	//}
-
-}*/
 
 
 
@@ -6124,12 +5669,6 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 					else if (PED::IS_PED_IN_ANY_BOAT(actorPed)) {
 						DELTA_TICKS = 4000;
 					}
-					else if (PED::IS_PED_IN_ANY_SUB(actorPed)) {
-						DELTA_TICKS = 3000;
-					}
-					else if (PED::IS_PED_ON_ANY_BIKE(actorPed)) {
-						DELTA_TICKS = 1000;
-					}
 					else {
 						DELTA_TICKS = 500;
 					}
@@ -6196,6 +5735,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 					}
 					else {
 						//check for a scenario. Only apply if it's the first scenario or a new one
+						//TODO RDR2 https://github.com/elsewhat/rdr2-mod-scene-director/issues/17
 						if (PED::IS_PED_USING_ANY_SCENARIO(actorPed) && (isActorUsingScenario == false || PED::IS_PED_USING_SCENARIO(actorPed, currentScenario.name) == false)) {
 							DELTA_TICKS = 500;
 							isActorUsingScenario = true;
@@ -6283,6 +5823,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 								if (isReloading == false) {//only record one reloading item pr reload
 									isReloading = true;
 									Hash weaponHash;
+									//TODO RDR2: https://github.com/Saltyq/ScriptHookRDR2DotNet/blob/5494222ee3494d18c104f3a0fb42a267244cd246/source/scripting_v3/RDR2/Weapons/WeaponCollection.cs#L49
 									WEAPON::GET_CURRENT_PED_WEAPON(actorPed, &weaponHash, 1);
 									Vector3 weaponImpactLocation;
 									bool doAim = false;
@@ -6322,9 +5863,6 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 									}
 									else if (AI::IS_PED_WALKING(actorPed)) {
 										walkSpeed =0.8;
-									}
-									else if (AI::IS_PED_STRAFING(actorPed)) {
-										walkSpeed = 0.0;
 									}
 
 									float actorHeading = ENTITY::GET_ENTITY_HEADING(actorPed);
@@ -6404,33 +5942,6 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 				log_to_file(recordingItem.toString());
 			}
 
-			//check for rocket boost or vehicle parachute
-			if (!hasOutdatedGTA && PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
-				Vehicle actorVeh = PED::GET_VEHICLE_PED_IS_USING(actorPed);
-				
-				if (VEHICLE::_HAS_VEHICLE_ROCKET_BOOST(actorVeh) && VEHICLE::_IS_VEHICLE_ROCKET_BOOST_ACTIVE(actorVeh)) {
-					Ped pedDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(actorVeh, -1);
-					if (pedDriver == actorPed && (hasRecordedRocketBoost == false || ticksSinceStart > lastRocketBoost + 5500)) {
-						ActorVehicleRocketBoostRecordingItem recordingItem(ticksSinceStart, DELTA_TICKS, actorIndex, actorPed, actorLocation, actorVeh, 0.0f);
-						actorRecording.push_back(std::make_shared<ActorVehicleRocketBoostRecordingItem>(recordingItem));
-						log_to_file(recordingItem.toString());
-						lastRocketBoost = ticksSinceStart;
-						hasRecordedRocketBoost = true;
-					}
-				}
-
-				if (VEHICLE::_HAS_VEHICLE_PARACHUTE(actorVeh) && VEHICLE::_CAN_VEHICLE_PARACHUTE_BE_ACTIVATED(actorVeh)) {
-					Ped pedDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(actorVeh, -1);
-					if (pedDriver == actorPed && hasRecordedVehParachute == false) {
-						ActorVehicleParachuteRecordingItem recordingItem(ticksSinceStart, DELTA_TICKS, actorIndex, actorPed, actorLocation, actorVeh, 0.0f);
-						actorRecording.push_back(std::make_shared<ActorVehicleParachuteRecordingItem>(recordingItem));
-						log_to_file(recordingItem.toString());
-						hasRecordedVehParachute = true;
-						vehicleParachute = actorVeh;
-					}
-				}
-			}
-
 			
 
 			WAIT(0);
@@ -6449,11 +5960,6 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 
 		log_to_file("Recorded " + std::to_string(actorRecording.size()) + " instructions");
 		set_status_text("Recorded " + std::to_string(actorRecording.size()) + " instructions");
-
-		//doesn't have the intended effect
-		if (hasRecordedVehParachute) {
-			VEHICLE::_SET_VEHICLE_PARACHUTE_ACTIVE(vehicleParachute, false);
-		}
 
 		set_status_text("Recording stopped");
 		nextWaitTicks = 400;
@@ -6644,10 +6150,11 @@ void action_submenu_active_delete() {
 		Entity entityToTeleport = actorPed;
 		if (PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
 			entityToTeleport = PED::GET_VEHICLE_PED_IS_USING(actorPed);
+			/* Commented for RDR2
 			if (VEHICLE::IS_VEHICLE_STUCK_ON_ROOF(entityToTeleport)) {
 				VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(entityToTeleport);
 				WAIT(100);
-			}
+			}*/
 
 		}
 		teleport_entity_to_location(entityToTeleport, targetLocation, true);
@@ -6870,7 +6377,7 @@ void action_copy_player_actions() {
 							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
 								if (isSkydiving == false) {
 									log_to_file("Giving weapon " + std::to_string(currentWeapon) + " to actor " + std::to_string(actor.getActorPed()));
-									WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), currentWeapon, 1000, 1, 1);
+									WEAPON::GIVE_DELAYED_WEAPON_TO_PED(actor.getActorPed(), currentWeapon, 1000, 1, 1);
 								}
 								else {
 									log_to_file("Not giving weapon to actor as we are skydiving");
@@ -6919,7 +6426,7 @@ void action_copy_player_actions() {
 										AI::TASK_VEHICLE_SHOOT_AT_PED(lastVehicle, targetEntity, 0x41a00000);
 									}
 									else {
-										AI::TASK_SHOOT_AT_ENTITY(actor.getActorPed(), currentTarget, -1, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_SINGLE_SHOT"));
+										AI::TASK_SHOOT_AT_ENTITY(actor.getActorPed(), currentTarget, -1, GAMEPLAY::GET_HASH_KEY("FIRING_PATTERN_SINGLE_SHOT"),0);
 									}
 								}
 							}
@@ -6982,74 +6489,6 @@ void action_copy_player_actions() {
 					}
 				}
 
-				//check if the player is falling
-				if (PED::GET_PED_PARACHUTE_STATE(playerPed) == 0) {
-					if (hasGivenParachute == false) {
-						log_to_file("Everyone leave vehicle");
-						//AI::TASK_EVERYONE_LEAVE_VEHICLE(lastVehicle);
-
-						log_to_file("Giving parachutes to all actors and task sky dive");
-						hasGivenParachute = true;
-						for (auto &actor : actors) {
-							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
-								WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), GAMEPLAY::GET_HASH_KEY("gadget_parachute"), 1, 1, 1);
-								//AI::TASK_SKY_DIVE(actorShortcut[i]);
-								AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), lastVehicle, 4160, 1 << 8);
-							}
-						}
-					}
-
-				}
-				else if (PED::GET_PED_PARACHUTE_STATE(playerPed) == 1 || PED::GET_PED_PARACHUTE_STATE(playerPed) == 2) {
-
-					if (isSkydiving == false) {
-						isSkydiving = true;
-						log_to_file("Actors should deploy parachute");
-					}
-					else {//isSkydiving = true;
-						Vector3 playerLocation = ENTITY::GET_ENTITY_COORDS(playerPed, true,0);
-						float zGroundLevel;
-						GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerLocation.x, playerLocation.y, playerLocation.z, &zGroundLevel,0);
-
-						//log_to_file("Ground level to parachute to is " +std::to_string(zGroundLevel));
-
-						for (auto &actor : actors) {
-							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
-								if (PED::GET_PED_PARACHUTE_STATE(actor.getActorPed()) == 0) {
-									//log_to_file("Actor " + std::to_string(actorShortcut[i]) + " should deploy parachute");
-
-									AI::TASK_PARACHUTE_TO_TARGET(actor.getActorPed(), playerLocation.x, playerLocation.y, zGroundLevel);
-
-								}
-								else if (PED::IS_PED_IN_ANY_VEHICLE(actor.getActorPed(), 0)) {
-									//log_to_file("Actor " + std::to_string(actorShortcut[i]) + " should sky dive");
-									//had some issues with them not exiting the vehicle so use TASK_LEAVE_VEHICLE with a teleport flag instead
-									//AI::TASK_SKY_DIVE(actorShortcut[i]);
-									AI::TASK_LEAVE_VEHICLE(actor.getActorPed(), lastVehicle, 4160, 1 << 8);
-									WEAPON::GIVE_WEAPON_TO_PED(actor.getActorPed(), GAMEPLAY::GET_HASH_KEY("gadget_parachute"), 1, 1, 1);
-								}
-							}
-						}
-						WAIT(50);
-					}
-				}
-				else if (isSkydiving) {//check if we have landed
-					if (PED::GET_PED_PARACHUTE_STATE(playerPed) == -1) {
-						bool allActorsOnGround = true;
-						for (auto &actor : actors) {
-							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false && PED::GET_PED_PARACHUTE_STATE(actor.getActorPed()) != -1) {
-								//log_to_file("Actor " + std::to_string(actorShortcut[i]) + " has not yet landed");
-								allActorsOnGround = false;
-							}
-						}
-						if (allActorsOnGround) {
-							log_to_file("All actors has landed. Skydiving is finished");
-							isSkydiving = false;
-							hasGivenParachute = false;
-						}
-					}
-
-				}
 
 				if (should_display_app_hud()) {
 					if (menu_up_key_pressed()) {

@@ -317,7 +317,7 @@ void StageLight::swapLightObject(GTAObject newLightObject)
 {
 	//update current position and rotation
 	if (m_lightObject.objReference == 0) {
-		Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(m_lightObject.objReference, true);
+		Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(m_lightObject.objReference, true,0);
 		m_lightPosition = currentPosition;
 	}
 	//delete old object
@@ -342,7 +342,7 @@ void StageLight::swapLightObject(GTAObject newLightObject)
 			return;
 		}
 	}
-
+	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/21
 	int newObjectRef = OBJECT::CREATE_OBJECT(m_lightObject.objHash, m_lightPosition.x, m_lightPosition.y, m_lightPosition.z, true, true, false);
 	ENTITY::SET_ENTITY_ROTATION(newObjectRef, m_lightRotation.x + 180, 0, m_lightRotation.z, 2, true);
 
@@ -475,7 +475,7 @@ void StageLight::turnOff()
 {
 	if (m_lightObject.objReference != 0) {
 		//ENTITY::SET_ENTITY_ALPHA(m_lightObject.objReference, 0, false);
-		ENTITY::SET_ENTITY_VISIBLE(m_lightObject.objReference, false, false);
+		ENTITY::SET_ENTITY_VISIBLE(m_lightObject.objReference, false);
 		//log_to_file("Light off");
 	}
 }
@@ -484,7 +484,7 @@ void StageLight::turnOn()
 {
 	if (m_lightObject.objReference != 0) {
 		//ENTITY::SET_ENTITY_ALPHA(m_lightObject.objReference, 255, false);
-		ENTITY::SET_ENTITY_VISIBLE(m_lightObject.objReference, true, false);
+		ENTITY::SET_ENTITY_VISIBLE(m_lightObject.objReference, true);
 		//log_to_file("Light on");
 	}
 }
@@ -534,7 +534,7 @@ void StageLight::stopMovement()
 void StageLight::actionOnTick(DWORD tick, std::vector<Actor>& actors)
 {
 	if (m_doTrackPed) {
-		Vector3 currentActorPosition = ENTITY::GET_ENTITY_COORDS(m_trackPedId, true);
+		Vector3 currentActorPosition = ENTITY::GET_ENTITY_COORDS(m_trackPedId, true,0);
 		Vector3 newLightPosition;
 
 		newLightPosition.x = currentActorPosition.x + m_trackOffset.x;

@@ -410,7 +410,7 @@ void BirdsEyeMode::drawMenu() {
 	}
 
 	DRAW_TEXT("Exit mode", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_EXIT_BIRDS_EYE_MODE;
@@ -428,11 +428,11 @@ void BirdsEyeMode::drawMenu() {
 	//Scene mode
 	if (sceneMode == SCENE_MODE_ACTIVE) {
 		DRAW_TEXT("Scene mode: Active", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 	else {
 		DRAW_TEXT("Scene mode: Setup", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 	if (menu_active_index == drawIndex) {
@@ -449,11 +449,11 @@ void BirdsEyeMode::drawMenu() {
 
 	if (shouldDrawRecordingMarkers) {
 		DRAW_TEXT("Rec. markers: Show", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 	else {
 		DRAW_TEXT("Rec. markers: Hide", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 	if (menu_active_index == drawIndex) {
@@ -470,11 +470,11 @@ void BirdsEyeMode::drawMenu() {
 
 	if (showDisabled) {
 		DRAW_TEXT("Disabled: Show", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 	else {
 		DRAW_TEXT("Disabled: Hide", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 	}
 
 	if (menu_active_index == drawIndex) {
@@ -496,7 +496,7 @@ void BirdsEyeMode::drawMenu() {
 
 
 		DRAW_TEXT("Edit nearest recording", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	}
 
@@ -510,7 +510,7 @@ void BirdsEyeMode::drawMenu() {
 	}
 
 	DRAW_TEXT("Add light", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_ADD_LIGHT;
@@ -526,7 +526,7 @@ void BirdsEyeMode::drawMenu() {
 	}
 
 	DRAW_TEXT("Clear all lights", 0.88, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.93, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	if (menu_active_index == drawIndex) {
 		menu_active_action = MENU_ITEM_REMOVE_LIGHTS;
@@ -583,7 +583,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 		}
 		
 
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -598,7 +598,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 
 		DRAW_TEXT(strdup(("Max checks: " + std::to_string(activeRecordingItem->getNrAttemptsBeforeSkipping())).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 		
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -612,7 +612,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 		}
 
 		DRAW_TEXT(strdup(("Check every " + std::to_string(activeRecordingItem->getTicksDeltaCheckCompletion()) + " ms").c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+		GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 		drawIndex++;
 		submenu_index++;
@@ -633,7 +633,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 			}
 
 			DRAW_TEXT(strdup(("Walking speed:"+ roundNumber(onfootRecordingItem->getWalkSpeed())).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -648,7 +648,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 			}
 
 			DRAW_TEXT(strdup(("Minimal distance:" + roundNumber(onfootRecordingItem->getMinDistanceBeforeCompleted())).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -666,7 +666,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 			}
 
 			DRAW_TEXT(strdup(("Speed:" + roundNumber(vehicleMovementRecordingItem->getSpeedInVehicle())).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -681,7 +681,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 			}
 
 			DRAW_TEXT(strdup(("Minimal distance:" + roundNumber(vehicleMovementRecordingItem->getMinDistanceBeforeCompleted())).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -698,7 +698,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 			}
 
 			DRAW_TEXT(strdup(("Anims:" + animationRecording->getAnimationSequence().toString()).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -720,7 +720,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 				DRAW_TEXT("Climb: No", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 			}
 			
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -742,7 +742,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 				DRAW_TEXT("Loop: No", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 			}
 
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -761,7 +761,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 				DRAW_TEXT("Keep props: No", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 			}
 
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -780,7 +780,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 				DRAW_TEXT("Use: Recording loc", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 			}
 
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -795,7 +795,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 
 			DRAW_TEXT(strdup(("Rotation: " + roundNumber(syncedAnimRecording->getRotation())).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 
-			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+			GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 			drawIndex++;
 			submenu_index++;
@@ -814,7 +814,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 	}
 	
 	DRAW_TEXT("Edit position", 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	drawIndex++;
 	submenu_index++;
@@ -839,7 +839,7 @@ void BirdsEyeMode::drawSubMenuEdit() {
 	}
 
 	DRAW_TEXT(strdup((menuText).c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
-	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100);
+	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
 	submenu_max_index = submenu_index;
 }
