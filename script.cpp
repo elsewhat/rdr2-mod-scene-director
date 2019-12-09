@@ -157,9 +157,11 @@ TaskSequence currentTaskSequence = 100;
 
 void set_status_text(std::string text)
 {
+	log_to_file("RDR2 set_status_text not implemented");
+	/*
 	UI::_SET_NOTIFICATION_TEXT_ENTRY("STRING");
 	UI::_ADD_TEXT_COMPONENT_STRING((LPSTR)text.c_str());
-	UI::_DRAW_NOTIFICATION(1, 1);
+	UI::_DRAW_NOTIFICATION(1, 1);*/
 }
 
 //log and config file handling borrowed from https://github.com/amoshydra/bearded-batman/blob/e814cf559edbb24b1ef80a326d0608ff67ba17cb/source/Kinky/script.cpp
@@ -225,12 +227,12 @@ static LPCSTR weaponNames[] = {
 
 void give_all_weapons(Player playerPed) {
 	for (int i = 0; i < sizeof(weaponNames) / sizeof(weaponNames[0]); i++)
-		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *)weaponNames[i]), 1000, 0);
+		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *)weaponNames[i]), 1000, 1,0);
 	//set_status_text("all weapons added");
 }
 
 void give_basic_weapon(Player playerPed) {
-	WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *)weaponNames[7]), 1000, 0);
+	WEAPON::GIVE_DELAYED_WEAPON_TO_PED(playerPed, GAMEPLAY::GET_HASH_KEY((char *)weaponNames[7]), 1000, 1,0);
 }
 
 Actor& get_actor_from_ped(Ped ped) {
@@ -321,18 +323,20 @@ void check_player_model()
 
 void DRAW_TEXT(char* Text, float X, float Y, float S_X, float S_Y, int Font, bool Outline, bool Shadow, bool Center, bool RightJustify, int R, int G, int B, int A)
 {
-	UI::SET_TEXT_FONT(Font);
+	//UI::SET_TEXT_FONT(Font);
 	UI::SET_TEXT_SCALE(S_X, S_Y);
-	UI::SET_TEXT_COLOUR(R, G, B, A);
+	UI::SET_TEXT_COLOR_RGBA(R, G, B, A);
+	/*
 	if (Outline)
-		UI::SET_TEXT_OUTLINE();
+		UI::SET_TEXT_OUTLINE();*/
 	if (Shadow)
-		UI::SET_TEXT_DROP_SHADOW();
+		UI::SET_TEXT_DROPSHADOW(2,40,40,40,50);
+	
 	UI::SET_TEXT_CENTRE(Center);
-	UI::SET_TEXT_RIGHT_JUSTIFY(RightJustify);
-	UI::_SET_TEXT_ENTRY("STRING");
-	UI::_ADD_TEXT_COMPONENT_STRING(Text);
-	UI::_DRAW_TEXT(X, Y);
+	//UI::SET_TEXT_RIGHT_JUSTIFY(RightJustify);
+	//UI::_SET_TEXT_ENTRY("STRING");
+	//UI::_ADD_TEXT_COMPONENT_STRING(Text);
+	UI::DRAW_TEXT(Text,X, Y);
 }
 
 
@@ -485,6 +489,7 @@ void assign_actor_to_relationship_group(Ped ped, RelationshipGroup relationshipG
 }
 
 void draw_instructional_buttons() {
+	/*
 	if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
 		//_instructionalButtonsScaleform.CallFunction("CLEAR_ALL");
 		GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleForm, "CLEAR_ALL");
@@ -534,33 +539,6 @@ void draw_instructional_buttons() {
 		GRAPHICS::_POP_SCALEFORM_MOVIE_FUNCTION_VOID();
 
 
-
-
-		/* Clone moved to menu
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION(scaleForm, "SET_DATA_SLOT");
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT(0);
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("t_F10");
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("Clone player");
-		GRAPHICS::_POP_SCALEFORM_MOVIE_FUNCTION_VOID();
-		*/
-		
-		/* Possess moved to menu
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION(scaleForm, "SET_DATA_SLOT");
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT(1);
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("t_F9");
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("Possess ped");
-		GRAPHICS::_POP_SCALEFORM_MOVIE_FUNCTION_VOID();
-		*/
-
-		/* Waypoint to all less focus now
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION(scaleForm, "SET_DATA_SLOT");
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT(2);
-		GRAPHICS::_0xE83A3E3557A56640(insControlKey);
-		GRAPHICS::_0xE83A3E3557A56640(altControlKey);
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("Waypoint to all");
-		GRAPHICS::_POP_SCALEFORM_MOVIE_FUNCTION_VOID();
-		*/
-
 		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION(scaleForm, "SET_DATA_SLOT");
 		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT(4);
 		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("t_A");
@@ -577,16 +555,6 @@ void draw_instructional_buttons() {
 		GRAPHICS::_POP_SCALEFORM_MOVIE_FUNCTION_VOID();
 
 
-
-		/* Hiding scene mode
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION(scaleForm, "SET_DATA_SLOT");
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT(6);
-		GRAPHICS::_0xE83A3E3557A56640(spaceControlKey);
-		GRAPHICS::_0xE83A3E3557A56640(altControlKey);
-		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING("Scene mode");
-		GRAPHICS::_POP_SCALEFORM_MOVIE_FUNCTION_VOID();
-		*/
-
 		//_instructionalButtonsScaleform.CallFunction("DRAW_INSTRUCTIONAL_BUTTONS", -1);
 		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION(scaleForm, "DRAW_INSTRUCTIONAL_BUTTONS");
 		GRAPHICS::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT(-1);
@@ -599,9 +567,11 @@ void draw_instructional_buttons() {
 	else {
 		log_to_file("Scaleform has not loaded. scaleForm has value " + std::to_string(scaleForm));
 	}
+	*/
 }
 
 void draw_instructional_buttons_player_recording() {
+	/*
 	if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
 		GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleForm, "CLEAR_ALL");
 
@@ -642,9 +612,11 @@ void draw_instructional_buttons_player_recording() {
 	else {
 		log_to_file("Scaleform has not loaded. scaleForm has value " + std::to_string(scaleForm));
 	}
+	*/
 }
 
 void draw_instructional_buttons_animation_preview() {
+	/*
 	if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
 		GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleForm, "CLEAR_ALL");
 
@@ -724,9 +696,11 @@ void draw_instructional_buttons_animation_preview() {
 	else {
 		log_to_file("Scaleform has not loaded. scaleForm has value " + std::to_string(scaleForm));
 	}
+	*/
 }
 
 void draw_instructional_buttons_animation_sync_preview() {
+	/*
 	if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
 		GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleForm, "CLEAR_ALL");
 
@@ -783,6 +757,7 @@ void draw_instructional_buttons_animation_sync_preview() {
 	else {
 		log_to_file("Scaleform has not loaded. scaleForm has value " + std::to_string(scaleForm));
 	}
+	*/
 }
 
 
@@ -1322,7 +1297,7 @@ void draw_submenu_player(int drawIndex) {
 		textColorR = 255, textColorG = 255, textColorB = 255, bgColorR = 0, bgColorG = 0, bgColorB = 0;
 	}
 
-	std::string healthText = "Health: " +std::to_string(ENTITY::GET_ENTITY_MAX_HEALTH(actor.getActorPed()));
+	std::string healthText = "Health: " +std::to_string(ENTITY::GET_ENTITY_MAX_HEALTH(actor.getActorPed(),1));
 	DRAW_TEXT(strdup(healthText.c_str()), 0.76, 0.888 - (0.04)*drawIndex, 0.3, 0.3, 0, false, false, false, false, textColorR, textColorG, textColorB, 200);
 	GRAPHICS::DRAW_RECT(0.81, 0.900 - (0.04)*drawIndex, 0.113, 0.034, bgColorR, bgColorG, bgColorB, 100, true, 0);
 
@@ -2218,7 +2193,8 @@ void teleport_entity_to_location(Entity entityToTeleport, Vector3 location, bool
 		if (!groundFound)
 		{
 			location.z = 1000.0;
-			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
+
+			//WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
 		}
 	}
 
@@ -2226,14 +2202,14 @@ void teleport_entity_to_location(Entity entityToTeleport, Vector3 location, bool
 
 	//after a teleport, actions some time seems to be stuck
 	if (ENTITY::IS_ENTITY_A_PED(entityToTeleport)) {
-		//AI::CLEAR_PED_TASKS(entityToTeleport);
+		//AI::CLEAR_PED_TASKS(entityToTeleport,0,0);
 	}
 	else if (ENTITY::IS_ENTITY_A_VEHICLE(entityToTeleport)) {
 		//TODO RDR2: Removed last param. Is that correct?
 		VEHICLE::SET_VEHICLE_ENGINE_ON(entityToTeleport, false, true);
 		Ped pedDriver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(entityToTeleport, -1);
 		if (pedDriver >= 1) {
-			//AI::CLEAR_PED_TASKS(pedDriver);
+			//AI::CLEAR_PED_TASKS(pedDriver,0,0);
 			//AI::TASK_PAUSE(pedDriver, 500);
 		}
 	}
@@ -2259,10 +2235,11 @@ void teleport_player_to_waypoint() {
 		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
 
 		teleport_entity_to_location(entityToTeleport, waypointCoord,false);
+		/*
 		if (VEHICLE::IS_VEHICLE_STUCK_ON_ROOF(entityToTeleport)) {
 			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(entityToTeleport);
 			WAIT(100);
-		}
+		}*/
 	}
 	else {
 		set_status_text("Set waypoint before teleporting");
@@ -2280,7 +2257,7 @@ void possess_ped(Ped swapToPed) {
 
 		if (swapFromPed == swapToPed) {
 			if (is_autopilot_engaged_for_player == true) {
-				AI::CLEAR_PED_TASKS(swapFromPed);
+				AI::CLEAR_PED_TASKS(swapFromPed,0,0);
 				is_autopilot_engaged_for_player = false;
 				set_status_text("Autopilot disengaged. ALT+A to start it again");
 				log_to_file("possess_ped: Autopilot disengaged");
@@ -2304,7 +2281,7 @@ void possess_ped(Ped swapToPed) {
 		PLAYER::CHANGE_PLAYER_PED(PLAYER::PLAYER_ID(), swapToPed, false, false);
 
 		//stop any animations or scenarios being run on the ped
-		AI::CLEAR_PED_TASKS(swapToPed);
+		AI::CLEAR_PED_TASKS(swapToPed,0,0);
 		is_autopilot_engaged_for_player = false;
 
 		previousActor = actor;
@@ -2450,7 +2427,7 @@ void action_clone_player_with_vehicle() {
 
 		//clone the vehicle (doesn't include mods etc)
 		Vehicle clonedVehicle = VEHICLE::CREATE_VEHICLE(model, clonedVehicleCoords.x, clonedVehicleCoords.y, clonedVehicleCoords.z, 0.0, 1, 1);
-		VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(clonedVehicle);
+		VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(clonedVehicle,0);
 
 		ENTITY::SET_ENTITY_HEADING(clonedVehicle, ENTITY::GET_ENTITY_HEADING(playerPed));
 
@@ -3578,7 +3555,7 @@ void action_teleport_to_start_locations() {
 
 				//see http://gtaforums.com/topic/801452-death-recording-no-more-wastedbusted-screen-automatic-radio-off/
 				PED::SET_PED_CAN_RAGDOLL(actorPed, true);
-				AI::CLEAR_PED_TASKS_IMMEDIATELY(actorPed);
+				AI::CLEAR_PED_TASKS_IMMEDIATELY(actorPed,0,0);
 				teleport_entity_to_location(entityToTeleport, location, true);
 
 			}
@@ -3709,7 +3686,7 @@ void action_teleport_to_start_locations() {
 			if (PED::IS_PED_IN_ANY_VEHICLE(actorPed, 0)) {
 				log_to_file("Setting vehicle back to drivable for actor " + std::to_string(actorPed));
 				Vehicle teleportedVehicle = PED::GET_VEHICLE_PED_IS_USING(actorPed);
-				VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(teleportedVehicle);
+				VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(teleportedVehicle,0);
 				VEHICLE::SET_VEHICLE_UNDRIVEABLE(teleportedVehicle, false);
 				VEHICLE::SET_VEHICLE_DOORS_SHUT(teleportedVehicle, true);
 			}
@@ -3743,7 +3720,7 @@ void action_teleport_to_start_locations() {
 				int ressurectTries = 0;
 				while (ressurectTries < 2){
 					PED::SET_PED_CAN_RAGDOLL(actorPed, true);
-					AI::CLEAR_PED_TASKS_IMMEDIATELY(actorPed);
+					AI::CLEAR_PED_TASKS_IMMEDIATELY(actorPed,0,0);
 					teleport_entity_to_location(actorPed, location, true);
 					ressurectTries++;
 					WAIT(ressurectTries * 400);
@@ -3816,7 +3793,8 @@ void action_next_weather() {
 	index_weather++;
 	if (index_weather > gtaWeatherTypes.size() - 1) {
 		GAMEPLAY::CLEAR_WEATHER_TYPE_PERSIST();
-		GAMEPLAY::SET_RANDOM_WEATHER_TYPE();
+		//TODO RDR2 No idea what the params for this native is
+		GAMEPLAY::SET_RANDOM_WEATHER_TYPE(0,0);
 		index_weather = -1;
 		set_status_text("Weather is now back to normal");
 	}
@@ -3834,14 +3812,15 @@ void action_next_health() {
 	Actor & actor = get_actor_from_ped(PLAYER::PLAYER_PED_ID());
 	if (actor.isNullActor() == false) {
 		Ped actorPed = actor.getActorPed();
-		int currMaxHealth = ENTITY::GET_ENTITY_MAX_HEALTH(actorPed);
+		int currMaxHealth = ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0);
 		int newMaxHealth = currMaxHealth + 100;
 		if (newMaxHealth > 500) {
 			newMaxHealth = 100;
 		}
 
 		PED::SET_PED_MAX_HEALTH(actorPed, newMaxHealth);
-		ENTITY::SET_ENTITY_HEALTH(actorPed, newMaxHealth);
+		//TODO RDR2 No idea if 0 is the right last param
+		ENTITY::SET_ENTITY_HEALTH(actorPed, newMaxHealth,0);
 	}
 }
 
@@ -3893,7 +3872,7 @@ void action_next_walking_style() {
 	Actor & actor = get_actor_from_ped(PLAYER::PLAYER_PED_ID());
 	index_walking_style++;
 	if (index_walking_style > gtaWalkingStyles.size() - 1) {
-		PED::RESET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), 0.0);
+		//PED::RESET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), 0.0);
 		actor.setHasWalkingStyle(false);
 		actor.setWalkingStyle( ClipSet());
 		index_walking_style = -1;
@@ -3903,7 +3882,7 @@ void action_next_walking_style() {
 		ClipSet walkingStyle = gtaWalkingStyles[index_walking_style];
 		if (STREAMING::HAS_CLIP_SET_LOADED(walkingStyle.id)) {
 			//TODO RDR2: How to set movement style?  https://github.com/elsewhat/rdr2-mod-scene-director/issues/12
-			PED::SET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), walkingStyle.id, 1.0);
+			//PED::SET_PED_MOVEMENT_CLIPSET(PLAYER::PLAYER_PED_ID(), walkingStyle.id, 1.0);
 			actor.setHasWalkingStyle(true);
 			actor.setWalkingStyle(walkingStyle);
 		}
@@ -3911,7 +3890,6 @@ void action_next_walking_style() {
 			log_to_file("Clipset has not loaded yet");
 		}
 		
-		//set_status_text("Weather is now: " + std::string(weather.id));
 	}
 }
 
@@ -4016,7 +3994,7 @@ void action_animation_lipmovement_start() {
 	}
 
 	//Animation flags are type "Facial"
-	AI::TASK_PLAY_ANIM(actor.getActorPed(), "mp_facial", "mic_chatter", 8.0f, -8.0f, -1, ANIMATION_LOOP_FLAG1 | ANIMATION_ALLOW_MOVEMENT_FLAG6, 8.0f, 0, 0, 0);
+	AI::TASK_PLAY_ANIM(actor.getActorPed(), "mp_facial", "mic_chatter", 8.0f, -8.0f, -1, ANIMATION_LOOP_FLAG1 | ANIMATION_ALLOW_MOVEMENT_FLAG6, 8.0f, 0, 0, 0,0,0);
 }
 void action_animation_lipmovement_stop() {
 	Actor & actor = get_actor_from_ped(PLAYER::PLAYER_PED_ID());
@@ -4072,7 +4050,8 @@ void action_animation_single() {
 			log_to_file("PED::PLAY_FACIAL_ANIM not supported in rdr2");
 		}
 		else {
-			AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, -1, animationFlag.id, 8.0f, 0, 0, 0);
+			//TODO RDR2 add a few 0 params at the end
+			AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, -1, animationFlag.id, 8.0f, 0, 0, 0,0,0,0,0);
 			animationPrevious = animation;
 		}
 
@@ -4119,7 +4098,7 @@ void action_animation_sequence_play(AnimationSequence animSequence) {
 	for (auto &animation : animSequence.animationsInSequence) {
 		try {
 			log_to_file("AI::TASK_PLAY_ANIM " + std::to_string(task_seq) + " - " + std::to_string(animation.shortcutIndex) + " " + std::string(animation.animName) + " " + std::string(animation.animLibrary) + " " + std::to_string(animation.duration) + " " + std::to_string(animationFlag.id));
-			AI::TASK_PLAY_ANIM(0, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, animationFlag.id, 8.0f, 0, 0, 0);
+			AI::TASK_PLAY_ANIM(0, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, animationFlag.id, 8.0f, 0, 0, 0,0,0);
 		}
 		catch (const std::exception& e) {
 			log_to_file("Exception " + std::string(e.what()));
@@ -4445,7 +4424,7 @@ void action_animations_preview(){
 			if (hasLoaded) {
 				int duration = 500;
 				
-				AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, true, 8.0f, 0, 0, 0);
+				AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, true, 8.0f, 0, 0, 0,0,0);
 
 				ticksStart = GetTickCount();
 				while (!ENTITY::IS_ENTITY_PLAYING_ANIM(actorPed, animation.animLibrary, animation.animName, 3)) {
@@ -5133,7 +5112,7 @@ void action_toggle_scene_mode() {
 			//move the actor if he has a waypoint and if he's not the player
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(actorPed, true);
 			//TODO RDR2: https://github.com/Saltyq/ScriptHookRDR2DotNet/blob/5494222ee3494d18c104f3a0fb42a267244cd246/source/scripting_v3/RDR2/Entities/Peds/Tasks.cs#L376
-			AI::CLEAR_PED_TASKS(actorPed);
+			AI::CLEAR_PED_TASKS(actorPed,0,0);
 		}
 	}
 	nextWaitTicks = 500;
@@ -6152,7 +6131,7 @@ void action_submenu_active_delete() {
 			entityToTeleport = PED::GET_VEHICLE_PED_IS_USING(actorPed);
 			/* Commented for RDR2
 			if (VEHICLE::IS_VEHICLE_STUCK_ON_ROOF(entityToTeleport)) {
-				VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(entityToTeleport);
+				VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(entityToTeleport,0);
 				WAIT(100);
 			}*/
 
@@ -6360,7 +6339,7 @@ void action_copy_player_actions() {
 
 					for (auto &actor : actors) {
 						if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
-							AI::CLEAR_PED_TASKS(actor.getActorPed());
+							AI::CLEAR_PED_TASKS(actor.getActorPed(),0,0);
 						}
 					}
 				}
@@ -6377,7 +6356,7 @@ void action_copy_player_actions() {
 							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
 								if (isSkydiving == false) {
 									log_to_file("Giving weapon " + std::to_string(currentWeapon) + " to actor " + std::to_string(actor.getActorPed()));
-									WEAPON::GIVE_DELAYED_WEAPON_TO_PED(actor.getActorPed(), currentWeapon, 1000, 1, 1);
+									WEAPON::GIVE_DELAYED_WEAPON_TO_PED(actor.getActorPed(), currentWeapon, 1000,1,0);
 								}
 								else {
 									log_to_file("Not giving weapon to actor as we are skydiving");
@@ -6448,7 +6427,7 @@ void action_copy_player_actions() {
 
 							if (isSkydiving == false) {//clear_ped_tasks while skydiving has a tiny sideeffect
 								log_to_file("Clearing tasks for actor " + std::to_string(actor.getActorPed()));
-								AI::CLEAR_PED_TASKS(actor.getActorPed());
+								AI::CLEAR_PED_TASKS(actor.getActorPed(),0,0);
 							}
 
 						}
