@@ -416,7 +416,7 @@ std::string ActorStandingStillRecordingItem::toString()
 
 void ActorStandingStillRecordingItem::executeNativesForRecording(Actor actor, std::shared_ptr<ActorRecordingItem> nextRecordingItem, std::shared_ptr<ActorRecordingItem> previousRecordingItem)
 {
-	AI::CLEAR_PED_TASKS(actor.getActorPed());
+	AI::CLEAR_PED_TASKS(actor.getActorPed(),0,0);
 }
 
 bool ActorStandingStillRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorRecordingItem> nextRecordingItem, DWORD ticksStart,  DWORD ticksNow, int nrOfChecksForCompletion, Actor actor, Vector3 location)
@@ -651,7 +651,7 @@ bool ActorScenarioRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorR
 void ActorScenarioRecordingItem::executeNativesAfterRecording(Actor actor)
 {
 	log_to_file("ActorScenarioRecordingItem: executeNativesAfterRecording calling AI::CLEAR_PED_TASKS");
-	AI::CLEAR_PED_TASKS(actor.getActorPed());
+	AI::CLEAR_PED_TASKS(actor.getActorPed(),0,0);
 }
 
 std::string ActorScenarioRecordingItem::toUserFriendlyName()
@@ -693,7 +693,7 @@ bool ActorAimAtRecordingItem::isRecordingItemCompleted(std::shared_ptr<ActorReco
 
 void ActorAimAtRecordingItem::executeNativesAfterRecording(Actor actor)
 {
-	AI::CLEAR_PED_TASKS(actor.getActorPed());
+	AI::CLEAR_PED_TASKS(actor.getActorPed(),0,0);
 }
 
 std::string ActorAimAtRecordingItem::toUserFriendlyName()
@@ -730,7 +730,7 @@ bool ActorShootAtEntityRecordingItem::isRecordingItemCompleted(std::shared_ptr<A
 
 void ActorShootAtEntityRecordingItem::executeNativesAfterRecording(Actor actor)
 {
-	AI::CLEAR_PED_TASKS(actor.getActorPed());
+	AI::CLEAR_PED_TASKS(actor.getActorPed(),0,0);
 }
 
 std::string ActorShootAtEntityRecordingItem::toUserFriendlyName()
@@ -787,7 +787,7 @@ void ActorAnimationSequenceRecordingItem::executeNativesForRecording(Actor actor
 
 	//load animation dicts
 	for (auto &animation : m_animationSequence.animationsInSequence) {
-		AI::TASK_PLAY_ANIM(0, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, m_animationFlag.id, 8.0f, 0, 0, 0);
+		AI::TASK_PLAY_ANIM(0, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, m_animationFlag.id, 8.0f, 0, 0, 0,0,0);
 	}
 
 	AI::CLOSE_SEQUENCE_TASK(task_seq);
@@ -840,7 +840,7 @@ void ActorAnimationSequenceRecordingItem::previewRecording(Actor * actor)
 
 	//load animation dicts
 	for (auto &animation : m_animationSequence.animationsInSequence) {
-		AI::TASK_PLAY_ANIM(0, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, m_animationFlag.id, 8.0f, 0, 0, 0);
+		AI::TASK_PLAY_ANIM(0, animation.animLibrary, animation.animName, 8.0f, -8.0f, animation.duration, m_animationFlag.id, 8.0f, 0, 0, 0,0,0);
 	}
 	AI::TASK_PED_SLIDE_TO_COORD(0, m_location.x, m_location.y, m_location.z, m_heading, 1061158912);
 	AI::SET_SEQUENCE_TO_REPEAT(task_seq, true);
@@ -852,7 +852,7 @@ void ActorAnimationSequenceRecordingItem::previewRecording(Actor * actor)
 
 void ActorAnimationSequenceRecordingItem::stopPreviewRecording(Actor* actor)
 {
-	AI::CLEAR_PED_TASKS(actor->getActorPed());
+	AI::CLEAR_PED_TASKS(actor->getActorPed(),0,0);
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(actor->getActorPed(), m_location.x, m_location.y, m_location.z, 0, 0, 1);
 	ENTITY::SET_ENTITY_HEADING(actor->getActorPed(), m_heading);
 }
@@ -953,7 +953,7 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 
 	//check the weapon of the actor
 	Hash currentWeapon;
-	WEAPON::GET_CURRENT_PED_WEAPON(actor.getActorPed(), &currentWeapon, 1);
+	WEAPON::GET_CURRENT_PED_WEAPON(actor.getActorPed(), &currentWeapon, 1,0,0);
 	if (currentWeapon != m_weapon) {
 		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(actor.getActorPed(), m_weapon, 1000, 1, 1);
 	}
@@ -970,7 +970,8 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 	else {
 
 		if (m_walkSpeed > 0) {
-			AI::TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1, false, m_walkSpeed, m_heading, true, 0, 0, m_firingPattern);
+			//TODO RDR2: Adding an extra 0 param
+			AI::TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1, false, m_walkSpeed, m_heading, true, 0, 0, m_firingPattern,0);
 		}
 		else {
 			AI::TASK_AIM_GUN_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1000, 0, 0);
@@ -1141,7 +1142,7 @@ void ActorSpeakRecordingItem::executeNativesForRecording(Actor actor, std::share
 	}
 
 	//Animation flags are type "Facial"
-	AI::TASK_PLAY_ANIM(actor.getActorPed(), "mp_facial", "mic_chatter", 8.0f, -8.0f, -1, ANIMATION_LOOP_FLAG1 | ANIMATION_ALLOW_MOVEMENT_FLAG6, 8.0f, 0, 0, 0);
+	AI::TASK_PLAY_ANIM(actor.getActorPed(), "mp_facial", "mic_chatter", 8.0f, -8.0f, -1, ANIMATION_LOOP_FLAG1 | ANIMATION_ALLOW_MOVEMENT_FLAG6, 8.0f, 0, 0, 0,0,0);
 
 	if (m_isMovingWhileSpeaking && !PED::IS_PED_IN_ANY_VEHICLE(actor.getActorPed(), 0)) {
 		AI::TASK_GO_STRAIGHT_TO_COORD(actor.getActorPed(), m_location.x, m_location.y, m_location.z, m_walkSpeed, -1, m_heading, 0.5f,0);

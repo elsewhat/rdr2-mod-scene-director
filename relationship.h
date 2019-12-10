@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "scripthook\inc\types.h"
 
 struct RelationshipGroup

@@ -331,7 +331,7 @@ void StageLight::swapLightObject(GTAObject newLightObject)
 		m_lightObject.objHash = GAMEPLAY::GET_HASH_KEY(m_lightObject.objName);
 	}
 
-	STREAMING::REQUEST_MODEL(m_lightObject.objHash);
+	STREAMING::REQUEST_MODEL(m_lightObject.objHash,0);
 	DWORD ticksStart = GetTickCount();
 	while (!STREAMING::HAS_MODEL_LOADED(m_lightObject.objHash))
 	{
@@ -343,7 +343,7 @@ void StageLight::swapLightObject(GTAObject newLightObject)
 		}
 	}
 	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/21
-	int newObjectRef = OBJECT::CREATE_OBJECT(m_lightObject.objHash, m_lightPosition.x, m_lightPosition.y, m_lightPosition.z, true, true, false);
+	int newObjectRef = OBJECT::CREATE_OBJECT(m_lightObject.objHash, m_lightPosition.x, m_lightPosition.y, m_lightPosition.z, true, true, false,false,false);
 	ENTITY::SET_ENTITY_ROTATION(newObjectRef, m_lightRotation.x + 180, 0, m_lightRotation.z, 2, true);
 
 	m_lightObject.objReference = newObjectRef;
@@ -397,7 +397,7 @@ StageLight::StageLight(Vector3 lightPosition, Vector3 lightRotation, GTAObject l
 			m_lightObject.objHash = GAMEPLAY::GET_HASH_KEY(m_lightObject.objName);
 		}
 
-		STREAMING::REQUEST_MODEL(m_lightObject.objHash);
+		STREAMING::REQUEST_MODEL(m_lightObject.objHash,0);
 		DWORD ticksStart = GetTickCount();
 		while (!STREAMING::HAS_MODEL_LOADED(m_lightObject.objHash))
 		{
@@ -408,8 +408,8 @@ StageLight::StageLight(Vector3 lightPosition, Vector3 lightRotation, GTAObject l
 				return;
 			}
 		}
-
-		int newObjectRef = OBJECT::CREATE_OBJECT(m_lightObject.objHash, m_lightPosition.x, m_lightPosition.y, m_lightPosition.z, true, true, false);
+		//TODO RDR2: Unsure if adding two zeros in params is ok https://github.com/elsewhat/rdr2-mod-scene-director/issues/21	
+		int newObjectRef = OBJECT::CREATE_OBJECT(m_lightObject.objHash, m_lightPosition.x, m_lightPosition.y, m_lightPosition.z, true, true, false,false,false);
 		m_lightObject.objReference = newObjectRef;
 		ENTITY::SET_ENTITY_AS_MISSION_ENTITY(newObjectRef, true, true);
 
@@ -424,7 +424,7 @@ void StageLight::startTrackActor(Actor actor, int actorIndex)
 	m_trackPedId = actor.getActorPed();
 	m_trackActorIndex = actorIndex;
 
-	Vector3 currentActorPosition = ENTITY::GET_ENTITY_COORDS(m_trackPedId, true);
+	Vector3 currentActorPosition = ENTITY::GET_ENTITY_COORDS(m_trackPedId, true,0);
 	m_trackOffset.x = m_lightPosition.x - currentActorPosition.x;
 	m_trackOffset.y = m_lightPosition.y - currentActorPosition.y;
 	m_trackOffset.z = m_lightPosition.z - currentActorPosition.z;

@@ -306,10 +306,10 @@ void check_player_model()
 			WAIT(1000);
 
 			model = GAMEPLAY::GET_HASH_KEY("player_zero");
-			STREAMING::REQUEST_MODEL(model);
+			STREAMING::REQUEST_MODEL(model,0);
 			while (!STREAMING::HAS_MODEL_LOADED(model))
 				WAIT(0);
-			PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), model);
+			PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), model,false);
 			//TODO RDR2: is this required?
 			//PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
 			STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model);
@@ -2334,7 +2334,7 @@ void action_possess_ped() {
 
 		Ped *peds = new Ped[arrSize];
 		peds[0] = numElements;
-		int nrPeds = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), peds, -1);
+		int nrPeds = PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), peds, -1,0);
 		for (int i = 0; i < nrPeds; i++)
 		{
 			int offsettedID = i * 2 + 2;
@@ -2422,11 +2422,11 @@ void action_clone_player_with_vehicle() {
 
 		DWORD model = ENTITY::GET_ENTITY_MODEL(playerVehicle);
 		//let's make sure it is loaded (should be already)
-		STREAMING::REQUEST_MODEL(model);
+		STREAMING::REQUEST_MODEL(model,0);
 		while (!STREAMING::HAS_MODEL_LOADED(model)) WAIT(0);
 
 		//clone the vehicle (doesn't include mods etc)
-		Vehicle clonedVehicle = VEHICLE::CREATE_VEHICLE(model, clonedVehicleCoords.x, clonedVehicleCoords.y, clonedVehicleCoords.z, 0.0, 1, 1);
+		Vehicle clonedVehicle = VEHICLE::CREATE_VEHICLE(model, clonedVehicleCoords.x, clonedVehicleCoords.y, clonedVehicleCoords.z, 0.0, 1, 1,false,false);
 		VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(clonedVehicle,0);
 
 		ENTITY::SET_ENTITY_HEADING(clonedVehicle, ENTITY::GET_ENTITY_HEADING(playerPed));
@@ -2551,7 +2551,7 @@ void action_explode_nearby_vehicles(boolean setOutOfControl) {
 				//VEHICLE::SET_VEHICLE_OUT_OF_CONTROL(targetVehicle, true, true);
 			}
 			else {
-				VEHICLE::EXPLODE_VEHICLE(targetVehicle, true, false);
+				VEHICLE::EXPLODE_VEHICLE(targetVehicle, true, false,0);
 			}
 		}
 	}
@@ -2641,7 +2641,7 @@ void add_ped_to_slot(int slotIndex, Ped ped) {
 	int blipId = UI::ADD_BLIP_FOR_ENTITY(ped);
 	actors[slotIndex - 1].setBlipId(blipId);
 	//BLIP Sprite for nr1=17, nr9=25
-	RADAR::SET_BLIP_SPRITE(blipId, 16 + slotIndex);
+	RADAR::SET_BLIP_SPRITE(blipId, 16 + slotIndex,false);
 
 	//Store current waypoint
 	if (RADAR::IS_WAYPOINT_ACTIVE()) {
@@ -2901,7 +2901,7 @@ void action_load_actors() {
 
 
 
-		STREAMING::REQUEST_MODEL(pedModelHash);
+		STREAMING::REQUEST_MODEL(pedModelHash,0);
 		while (!STREAMING::HAS_MODEL_LOADED(pedModelHash)) {
 			WAIT(0);
 		}
@@ -2909,7 +2909,7 @@ void action_load_actors() {
 		Vector3 location = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true,0);
 		float startHeading = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
 
-		Ped newActorPed = PED::CREATE_PED(4, pedModelHash, location.x, location.y, location.z, startHeading, false, true);
+		Ped newActorPed = PED::CREATE_PED(4, pedModelHash, location.x, location.y, location.z, startHeading, false, false,0);
 
 		log_to_file("Setting ped variant");
 
@@ -3548,7 +3548,7 @@ void action_teleport_to_start_locations() {
 			if (ENTITY::IS_ENTITY_DEAD(actorPed)) {
 				log_to_file("First revive");
 				haveDeadActors = true;
-				ENTITY::SET_ENTITY_HEALTH(actor.getActorPed(), ENTITY::GET_ENTITY_MAX_HEALTH(actorPed));
+				ENTITY::SET_ENTITY_HEALTH(actor.getActorPed(), ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0),0);
 				Vector3 location = actor.getStartLocation();
 				location.z = location.z + 1.8f;
 				teleport_entity_to_location(entityToTeleport, location, true);
@@ -3706,7 +3706,7 @@ void action_teleport_to_start_locations() {
 			Ped actorPed = actor.getActorPed();
 			if (actor.isNullActor() == false && actor.hasStartLocation() && PED::IS_PED_FALLING(actorPed) ) {
 				log_to_file(std::to_string(actorPed) + " is falling or dead after we had dead peds. Trying to teleport back to top");
-				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0));
+				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0),0);
 				Vector3 location = actor.getStartLocation();
 				location.z = location.z + 2.5f;
 				teleport_entity_to_location(actorPed, location, true);
@@ -3714,7 +3714,7 @@ void action_teleport_to_start_locations() {
 			else if (actor.isNullActor() == false && actor.hasStartLocation() && (ENTITY::IS_ENTITY_DEAD(actorPed) || PED::IS_PED_DEAD_OR_DYING(actorPed, true))) {
 				log_to_file(std::to_string(actorPed) + " is still dead. Real desparte attempts at reviving");
 
-				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0));
+				ENTITY::SET_ENTITY_HEALTH(actorPed, ENTITY::GET_ENTITY_MAX_HEALTH(actorPed,0),0);
 				Vector3 location = actor.getStartLocation();
 				location.z = location.z + 2.2f;
 				int ressurectTries = 0;
@@ -4051,7 +4051,7 @@ void action_animation_single() {
 		}
 		else {
 			//TODO RDR2 add a few 0 params at the end
-			AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, -1, animationFlag.id, 8.0f, 0, 0, 0,0,0,0,0);
+			AI::TASK_PLAY_ANIM(actorPed, animation.animLibrary, animation.animName, 8.0f, -8.0f, -1, animationFlag.id, 8.0f, 0, 0, 0,0,0);
 			animationPrevious = animation;
 		}
 
@@ -4334,7 +4334,7 @@ void action_animations_preview(){
 		cameraHandle = CAM::CREATE_CAM_WITH_PARAMS("DEFAULT_SCRIPTED_CAMERA", camLocation.x, camLocation.y, camLocation.z, 0.0, 0.0, 0.0, 40.0, 1, 2);
 		CAM::ATTACH_CAM_TO_ENTITY(cameraHandle, actorPed, camOffset.x, camOffset.y, camOffset.z, true);
 		CAM::POINT_CAM_AT_ENTITY(cameraHandle, actorPed, 0.0f, 0.0f, 0.0f, true);
-		CAM::RENDER_SCRIPT_CAMS(true, 0, 3000, 1, 0);
+		CAM::RENDER_SCRIPT_CAMS(true, 0, 3000, 1, 0,0);
 	}
 
 	std::vector<Animation> animations = getAllAnimations();
@@ -4436,7 +4436,7 @@ void action_animations_preview(){
 					if (IsKeyDown(VK_MENU) && IsKeyDown(0x43)) {//stop preview
 						//reset cam
 						//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
-						CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
+						CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0,0);
 						return;
 					}
 
@@ -4455,7 +4455,7 @@ void action_animations_preview(){
 
 					CONTROLS::DISABLE_ALL_CONTROL_ACTIONS(0);
 					if (IsKeyDown(0x43)) {//stop preview
-						CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
+						CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0,0);
 						return ;
 					}
 					else if (IsKeyDown(0x4E)) {//next animation
@@ -4619,7 +4619,7 @@ void action_animations_preview(){
 
 	//reset cam
 	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
-	CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
+	CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0,0);
 
 
 }
@@ -4699,7 +4699,7 @@ void action_animation_sync_preview() {
 		CAM::ATTACH_CAM_TO_ENTITY(cameraHandle, actorPed, camOffset.x, camOffset.y, camOffset.z, true);
 		CAM::POINT_CAM_AT_ENTITY(cameraHandle, actorPed, 0.0f, 0.0f, 0.0f, true);
 		//TODO RDR2 https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
-		CAM::RENDER_SCRIPT_CAMS(true, 0, 3000, 1, 0);
+		CAM::RENDER_SCRIPT_CAMS(true, 0, 3000, 1, 0,0);
 	}
 
 	std::vector<SyncedAnimation> gtaSyncedAnimations = getAllSyncedAnimations();
@@ -4795,7 +4795,7 @@ void action_animation_sync_preview() {
 					currentSyncedAnimation.cleanupAfterExecution(true, true);
 				}
 				//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
-				CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
+				CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0,0);
 				return;
 			}
 			else if (IsKeyDown(VK_LEFT)) {//rotate camera to the left
@@ -4874,7 +4874,7 @@ void action_animation_sync_preview() {
 
 	//reset cam
 	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/14
-	CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0);
+	CAM::RENDER_SCRIPT_CAMS(false, 0, 3000, 1, 0,0);
 }
 
 
@@ -5028,7 +5028,7 @@ void action_add_prop_to_actor(Actor actor, ActorProp actorProp) {
 
 	Vector3 position = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(actorPed, 1.0, 2.0, 0.0);
 	//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/15
-	STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY(actorProp.propId));
+	STREAMING::REQUEST_MODEL(GAMEPLAY::GET_HASH_KEY(actorProp.propId),0);
 	DWORD ticksStart = GetTickCount();
 	
 	log_to_file("Loading prop with name " + actorProp.name + " (" + actorProp.propId + ")");
@@ -5042,9 +5042,10 @@ void action_add_prop_to_actor(Actor actor, ActorProp actorProp) {
 			return;
 		}
 	}
-		
-	Object propObject = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY(actorProp.propId), position.x, position.y, position.z, 1, 1, 0);
-	ENTITY::ATTACH_ENTITY_TO_ENTITY(propObject, actorPed, PED::GET_PED_BONE_INDEX(actorPed, actorProp.bone), 0.0, 0.15, 0.0, 0.0, -20.0, 180.0, 0, 0, 0, 0, 2, 1);
+	//TODO RDR2: Unsure if adding two zeros in params is ok https://github.com/elsewhat/rdr2-mod-scene-director/issues/21	
+	Object propObject = OBJECT::CREATE_OBJECT(GAMEPLAY::GET_HASH_KEY(actorProp.propId), position.x, position.y, position.z, 1, 1, 0,0,0);
+	//TODO RDR2: Added two 0 params
+	ENTITY::ATTACH_ENTITY_TO_ENTITY(propObject, actorPed, PED::GET_PED_BONE_INDEX(actorPed, actorProp.bone), 0.0, 0.15, 0.0, 0.0, -20.0, 180.0, 0, 0, 0, 0, 2, 1,0,0);
 }
 
 
@@ -5803,7 +5804,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 									isReloading = true;
 									Hash weaponHash;
 									//TODO RDR2: https://github.com/Saltyq/ScriptHookRDR2DotNet/blob/5494222ee3494d18c104f3a0fb42a267244cd246/source/scripting_v3/RDR2/Weapons/WeaponCollection.cs#L49
-									WEAPON::GET_CURRENT_PED_WEAPON(actorPed, &weaponHash, 1);
+									WEAPON::GET_CURRENT_PED_WEAPON(actorPed, &weaponHash, false,1,false);
 									Vector3 weaponImpactLocation;
 									bool doAim = false;
 									if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(actorPed, &weaponImpactLocation)) {
@@ -5825,7 +5826,7 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 								Vector3 weaponImpactLocation;
 								if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(actorPed, &weaponImpactLocation)) {
 									Hash weaponHash;
-									WEAPON::GET_CURRENT_PED_WEAPON(actorPed, &weaponHash, 1);
+									WEAPON::GET_CURRENT_PED_WEAPON(actorPed, &weaponHash, false, 1, false);
 
 									DWORD deltaCheckRecordingTicks = 300;
 									if (lastBulletRecorded != 0) {
@@ -6323,10 +6324,10 @@ void action_copy_player_actions() {
 						for (auto &actor : actors) {
 							if (actor.isNullActor() == false && actor.isActorThisPed(playerPed) == false) {
 								if (currentScenario.hasEnterAnim) {
-									AI::TASK_START_SCENARIO_IN_PLACE(actor.getActorPed(), currentScenario.name, -1, 1);
+									AI::TASK_START_SCENARIO_IN_PLACE(actor.getActorPed(), GAMEPLAY::GET_HASH_KEY(currentScenario.name), -1,true,false,false,1.0,false);
 								}
 								else {
-									AI::TASK_START_SCENARIO_IN_PLACE(actor.getActorPed(), currentScenario.name, -1, 0);
+									AI::TASK_START_SCENARIO_IN_PLACE(actor.getActorPed(), GAMEPLAY::GET_HASH_KEY(currentScenario.name), -1, false, false, false, 1.0, false);
 								}
 								
 							}
@@ -6348,7 +6349,7 @@ void action_copy_player_actions() {
 				//check if the player is armed
 				if (WEAPON::IS_PED_ARMED(playerPed, 6)) {
 					Hash currentWeapon;
-					WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &currentWeapon, 1);
+					WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &currentWeapon, false, 1, false);
 					if (currentWeapon != previousWeapon) {
 						previousWeapon = currentWeapon;
 						//give and equip weapon to all other actors
@@ -6386,7 +6387,7 @@ void action_copy_player_actions() {
 
 									}
 									else {
-										AI::TASK_AIM_GUN_AT_ENTITY(actor.getActorPed(), targetEntity, -1, 0);
+										AI::TASK_AIM_GUN_AT_ENTITY(actor.getActorPed(), targetEntity, -1, 0,0);
 									}
 
 								}
@@ -6855,13 +6856,8 @@ void main()
 void ScriptMain()
 {
 	srand(time(NULL));
-	GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("CommonMenu", 0);
+	//GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("CommonMenu", 0);
 
-	scaleForm = GRAPHICS::REQUEST_SCALEFORM_MOVIE_INSTANCE("instructional_buttons");
-	log_to_file("Waiting for instructional_buttons to load");
-	while (!GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
-		WAIT(0);
-	}
 	log_to_file("instructional_buttons have loaded");
 
 	action_show_info_on_start();

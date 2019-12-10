@@ -29,6 +29,7 @@
     <ClCompile Include="weather.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="scripthook\inc\natives_patch.h" />
     <ClInclude Include="scripthook\inc\main.h" />
     <ClInclude Include="scripthook\inc\enums.h" />
     <ClInclude Include="scripthook\inc\natives.h" />

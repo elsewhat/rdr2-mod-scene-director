@@ -7,6 +7,7 @@
 #pragma once
 
 #include "scripthook\inc\natives.h"
+#include "scripthook\inc\natives_patch.h"
 #include "scripthook\inc\types.h"
 #include "scripthook\inc\enums.h"
 #include "scripthook\inc\main.h"

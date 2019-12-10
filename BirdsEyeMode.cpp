@@ -310,7 +310,7 @@ bool BirdsEyeMode::actionOnTick(DWORD tick, std::vector<Actor> & actors, std::ve
 void BirdsEyeMode::onEnterMode(SCENE_MODE aSceneMode)
 {
 	sceneMode = aSceneMode;
-	scaleForm = GRAPHICS::REQUEST_SCALEFORM_MOVIE("instructional_buttons");
+	//scaleForm = GRAPHICS::REQUEST_SCALEFORM_MOVIE("instructional_buttons");
 
 	//CAM::DO_SCREEN_FADE_OUT(1000);
 
@@ -344,7 +344,7 @@ void BirdsEyeMode::onEnterMode(SCENE_MODE aSceneMode)
 	WAIT(100);
 	CAM::STOP_CAM_POINTING(cameraHandle);
 
-	CAM::RENDER_SCRIPT_CAMS(true, 1, 1800, 1, 0);
+	CAM::RENDER_SCRIPT_CAMS(true, 1, 1800, 1, 0,0);
 
 	initializeStageLights();
 }
@@ -352,7 +352,7 @@ void BirdsEyeMode::onEnterMode(SCENE_MODE aSceneMode)
 void BirdsEyeMode::onExitMode()
 {
 	//reset cam
-	CAM::RENDER_SCRIPT_CAMS(false, 1, 1500, 1, 0);
+	CAM::RENDER_SCRIPT_CAMS(false, 1, 1500, 1, 0,0);
 	WAIT(1000);
 }
 
@@ -1235,6 +1235,7 @@ void BirdsEyeMode::actionStartAddLightMode()
 
 
 void BirdsEyeMode::drawInstructions() {
+	/*
 	if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
 		GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleForm, "CLEAR_ALL");
 
@@ -1308,10 +1309,12 @@ void BirdsEyeMode::drawInstructions() {
 	else {
 		log_to_file("Scaleform has not loaded. scaleForm has value " + std::to_string(scaleForm));
 	}
+	*/
 }
 
 
 void BirdsEyeMode::drawAddLightInstructions() {
+	/*
 	if (GRAPHICS::HAS_SCALEFORM_MOVIE_LOADED(scaleForm)) {
 		GRAPHICS::CALL_SCALEFORM_MOVIE_METHOD(scaleForm, "CLEAR_ALL");
 
@@ -1387,6 +1390,7 @@ void BirdsEyeMode::drawAddLightInstructions() {
 	else {
 		log_to_file("Scaleform has not loaded. scaleForm has value " + std::to_string(scaleForm));
 	}
+	*/
 }
 
 

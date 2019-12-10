@@ -97,7 +97,7 @@ void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> sy
 			gtaObject.objHash = GAMEPLAY::GET_HASH_KEY(gtaObject.objName);
 		}
 
-		STREAMING::REQUEST_MODEL(gtaObject.objHash);
+		STREAMING::REQUEST_MODEL(gtaObject.objHash,0);
 		while (!STREAMING::HAS_MODEL_LOADED(gtaObject.objHash))
 		{
 			WAIT(0);
@@ -114,7 +114,7 @@ void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> sy
 
 	
 	if (useFirstActorLocation && syncActors.size() >= 1) {
-		sceneLocation = ENTITY::GET_ENTITY_COORDS(syncActors.at(0)->getActorPed(), true);
+		sceneLocation = ENTITY::GET_ENTITY_COORDS(syncActors.at(0)->getActorPed(), true,0);
 	}
 	else {
 		//Vector3 actorLocation = ENTITY::GET_ENTITY_COORDS(syncActors.at(0)->getActorPed(), true);
@@ -140,7 +140,7 @@ void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> sy
 				AI::TASK_SYNCHRONIZED_SCENE(syncActors.at(actorIndex)->getActorPed(), m_sceneId, animation.animLibrary, animation.animName, 1000.0, -4.0, 64, 0, 0x447a0000, 0);
 				m_pedsInScene.push_back(syncActors.at(actorIndex)->getActorPed());
 
-				m_pedsInSceneStartLocation.push_back(ENTITY::GET_ENTITY_COORDS(syncActors.at(actorIndex)->getActorPed(), true));
+				m_pedsInSceneStartLocation.push_back(ENTITY::GET_ENTITY_COORDS(syncActors.at(actorIndex)->getActorPed(), true,0));
 				m_pedsInSceneStartHeading.push_back(ENTITY::GET_ENTITY_HEADING(syncActors.at(actorIndex)->getActorPed()));
 
 				actorIndex++;
@@ -156,7 +156,8 @@ void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> sy
 			//create object if it doesn't exist
 			if (m_syncObjects[objectIndex].objReference == 0) {
 				log_to_file("About to create object with name " + std::string(m_syncObjects[objectIndex].objName) + " and hash " + std::to_string(m_syncObjects[objectIndex].objHash));
-				int newObjectRef = OBJECT::CREATE_OBJECT(m_syncObjects[objectIndex].objHash, sceneLocation.x, sceneLocation.y, sceneLocation.z, true, true, false);
+				//TODO RDR2: Unsure if adding two zeros in params is ok https://github.com/elsewhat/rdr2-mod-scene-director/issues/21	
+				int newObjectRef = OBJECT::CREATE_OBJECT(m_syncObjects[objectIndex].objHash, sceneLocation.x, sceneLocation.y, sceneLocation.z, true, true, false,false,false);
 				m_syncObjects[objectIndex].objReference = newObjectRef;
 				m_objectsInScene.push_back(newObjectRef);
 			}
@@ -178,10 +179,10 @@ void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> sy
 				if (doLoop) {
 					duration = -1;
 				}
-				AI::TASK_PLAY_ANIM(syncActors.at(actorIndex)->getActorPed(), animation.animLibrary, animation.animName, 8.0f, -8.0f, duration, getDefaultAnimationFlag().id, 8.0f, 0, 0, 0);
+				AI::TASK_PLAY_ANIM(syncActors.at(actorIndex)->getActorPed(), animation.animLibrary, animation.animName, 8.0f, -8.0f, duration, getDefaultAnimationFlag().id, 8.0f, 0,0,0,0,0);
 
 				m_pedsInScene.push_back(syncActors.at(actorIndex)->getActorPed());
-				m_pedsInSceneStartLocation.push_back(ENTITY::GET_ENTITY_COORDS(syncActors.at(actorIndex)->getActorPed(), true));
+				m_pedsInSceneStartLocation.push_back(ENTITY::GET_ENTITY_COORDS(syncActors.at(actorIndex)->getActorPed(), true,false));
 				m_pedsInSceneStartHeading.push_back(ENTITY::GET_ENTITY_HEADING(syncActors.at(actorIndex)->getActorPed()));
 
 				actorIndex++;
@@ -261,7 +262,7 @@ void SyncedAnimation::cleanupAfterExecution(bool doDeleteObjects, bool teleportA
 			ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(ped, 0.0, 1);
 
 			if (teleportActorsBackToStart) {
-				AI::CLEAR_PED_TASKS(ped);
+				AI::CLEAR_PED_TASKS(ped,false,false);
 				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(ped, m_pedsInSceneStartLocation[i].x, m_pedsInSceneStartLocation[i].y, m_pedsInSceneStartLocation[i].z, 0, 0, 1);
 				ENTITY::SET_ENTITY_HEADING(ped, m_pedsInSceneStartHeading[i]);
 			}
@@ -290,7 +291,7 @@ void SyncedAnimation::cleanupAfterExecution(bool doDeleteObjects, bool teleportA
 		int i = 0;
 		for (auto &ped : m_pedsInScene) {
 			//no idea what 2+3 param is
-			AI::CLEAR_PED_TASKS(ped);
+			AI::CLEAR_PED_TASKS(ped,false,false);
 
 			if (teleportActorsBackToStart) {
 				ENTITY::SET_ENTITY_COORDS_NO_OFFSET(ped, m_pedsInSceneStartLocation[i].x, m_pedsInSceneStartLocation[i].y, m_pedsInSceneStartLocation[i].z, 0, 0, 1);

@@ -55,6 +55,9 @@
     <ClInclude Include="GTAObject.h" />
     <ClInclude Include="StageLight.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="scripthook\inc\natives_patch.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
