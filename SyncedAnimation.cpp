@@ -41,6 +41,7 @@ SyncedAnimation::SyncedAnimation(std::string title, std::string category, bool i
 
 void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> syncActors, bool useFirstActorLocation, Vector3 directLocation, bool doLoop, bool useFirstActorRotation, float rotation)
 {
+	/* TODO RDR: identify alternative to synched animations
 	log_to_file("SyncedAnimation->executeSyncedAnimation " + toString());
 	DWORD ticksStart = GetTickCount();
 	m_doLooping = doLoop;
@@ -193,18 +194,19 @@ void SyncedAnimation::executeSyncedAnimation(bool silent, std::vector<Actor*> sy
 		}
 
 	}
+	*/
 }
 
 void SyncedAnimation::previewSyncedAnimation(std::vector<Actor*> syncActors, bool useFirstActorLocation, Vector3 directLocation, bool doLoop, bool useFirstActorRotation, float rotation)
 {
 	executeSyncedAnimation(false,syncActors, useFirstActorLocation, directLocation, true, useFirstActorLocation, rotation);
-	PED::SET_SYNCHRONIZED_SCENE_RATE(m_sceneId, 0.1f);
+	//PED::SET_SYNCHRONIZED_SCENE_RATE(m_sceneId, 0.1f);
 }
 
 void SyncedAnimation::updateLocationOfScene(Vector3 location)
 {
 	if (m_sceneId != 0) {
-		PED::SET_SYNCHRONIZED_SCENE_ORIGIN(m_sceneId, location.x, location.y, location.z, 0, 0, m_currentRotation, 2);
+		//PED::SET_SYNCHRONIZED_SCENE_ORIGIN(m_sceneId, location.x, location.y, location.z, 0, 0, m_currentRotation, 2);
 	}
 }
 
@@ -212,6 +214,8 @@ void SyncedAnimation::updateLocationOfScene(Vector3 location)
 
 bool SyncedAnimation::isCompleted()
 {
+	return true;
+	/* TODO RDR: 
 	if (m_isProperSynced) {
 		if (m_sceneId != 0) {
 			if (PED::IS_SYNCHRONIZED_SCENE_LOOPED(m_sceneId)) {
@@ -249,6 +253,7 @@ bool SyncedAnimation::isCompleted()
 
 
 	}
+	*/
 
 }
 
@@ -259,7 +264,7 @@ void SyncedAnimation::cleanupAfterExecution(bool doDeleteObjects, bool teleportA
 		int i = 0;
 		for (auto &ped : m_pedsInScene) {
 			//no idea what 2+3 param is
-			ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(ped, 0.0, 1);
+			//ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(ped, 0.0, 1);
 
 			if (teleportActorsBackToStart) {
 				AI::CLEAR_PED_TASKS(ped,false,false);
@@ -270,7 +275,7 @@ void SyncedAnimation::cleanupAfterExecution(bool doDeleteObjects, bool teleportA
 		}
 		for (auto &obj : m_objectsInScene) {
 			//no idea what 2+3 param is
-			ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(obj, 0.0, 1);
+			//ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(obj, 0.0, 1);
 			if (doDeleteObjects) {
 				OBJECT::DELETE_OBJECT(&obj);
 			}
@@ -284,7 +289,7 @@ void SyncedAnimation::cleanupAfterExecution(bool doDeleteObjects, bool teleportA
 
 		log_to_file("SyncedAnimation trying to dispose scene ");
 		//dispose scene
-		PED::_0xCD9CC7E200A52A6F(m_sceneId);
+		//PED::_0xCD9CC7E200A52A6F(m_sceneId);
 		m_sceneId = 0;
 	}
 	else {
@@ -301,7 +306,7 @@ void SyncedAnimation::cleanupAfterExecution(bool doDeleteObjects, bool teleportA
 		}
 		for (auto &obj : m_objectsInScene) {
 			//no idea what 2+3 param is
-			ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(obj, 0.0, 1);
+			//ENTITY::STOP_SYNCHRONIZED_ENTITY_ANIM(obj, 0.0, 1);
 			if (doDeleteObjects) {
 				OBJECT::DELETE_OBJECT(&obj);
 			}
@@ -315,7 +320,7 @@ void SyncedAnimation::setLooping(bool doLoop)
 {
 	if (m_sceneId!=0 && m_isProperSynced) {
 		log_to_file("Setting looping for scene to " + doLoop);
-		PED::SET_SYNCHRONIZED_SCENE_LOOPED(m_sceneId, doLoop);
+		//PED::SET_SYNCHRONIZED_SCENE_LOOPED(m_sceneId, doLoop);
 	}
 }
 

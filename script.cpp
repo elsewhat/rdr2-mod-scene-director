@@ -18,7 +18,6 @@
 #include "SyncedAnimation.h"
 #include "tinyxml2.h"
 #include "StageLight.h"
-#include "Network.h"
 
 #include <string>
 #include <ctime>
@@ -346,8 +345,10 @@ void store_current_waypoint_for_actor(Ped ped) {
 
 	if (RADAR::IS_WAYPOINT_ACTIVE()) {
 		log_to_file("store_current_waypoint_for_actor: Looking for ped with id " + std::to_string(ped));
-		int waypointID = RADAR::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
+		
+		Blip blip = RADAR::GET_MAIN_PLAYER_BLIP_ID();
+		//int waypointID = RADAR::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(blip);
 		//ignore the first index
 
 		Actor & actor = get_actor_from_ped(ped);
@@ -2231,8 +2232,8 @@ void teleport_player_to_waypoint() {
 	}
 
 	if (RADAR::IS_WAYPOINT_ACTIVE()) {
-		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
-		Vector3 waypointCoord = UI::GET_BLIP_COORDS(waypointID);
+		Blip waypointID = RADAR::GET_MAIN_PLAYER_BLIP_ID();
+		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 
 		teleport_entity_to_location(entityToTeleport, waypointCoord,false);
 		/*
@@ -2272,14 +2273,14 @@ void possess_ped(Ped swapToPed) {
 			move_to_waypoint(swapFromPed, actor.getWaypoint(),true);
 		}
 		else if (RADAR::IS_WAYPOINT_ACTIVE()) {
-			int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+			Blip waypointID = RADAR::GET_MAIN_PLAYER_BLIP_ID();
 			Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 			move_to_waypoint(swapFromPed, waypointCoord, true);
 		}
 
-
-		PLAYER::CHANGE_PLAYER_PED(PLAYER::PLAYER_ID(), swapToPed, false, false);
-
+		/*TODO RDR: How to posess play
+			PLAYER::CHANGE_PLAYER_PED(PLAYER::PLAYER_ID(), swapToPed, false, false);
+		*/
 		//stop any animations or scenarios being run on the ped
 		AI::CLEAR_PED_TASKS(swapToPed,0,0);
 		is_autopilot_engaged_for_player = false;
@@ -2571,10 +2572,10 @@ void check_if_ped_is_passenger_and_has_waypoint(Ped ped) {
 			if (pedDriver != ped) {
 				//player is a passenger, check if player has a waypoint
 				if (RADAR::IS_WAYPOINT_ACTIVE()) {
-					int waypointID;
+					Blip waypointID;
 					Vector3 waypointCoord;
 
-					waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+					waypointID = RADAR::GET_MAIN_PLAYER_BLIP_ID();
 					if (waypointID != lastWaypointID) {
 						log_to_file("check_if_ped_is_passenger_and_has_waypoint: New waypoint from passenger");
 
@@ -2637,15 +2638,15 @@ void add_ped_to_slot(int slotIndex, Ped ped) {
 
 	//Disable default assignment to a rel group
 	//assign_actor_to_relationship_group(ped, getDefaultRelationshipGroup());
-
+	/* TODO RDR ADD_BLIP_FOR_ENITITY not identified for RDR
 	int blipId = UI::ADD_BLIP_FOR_ENTITY(ped);
 	actors[slotIndex - 1].setBlipId(blipId);
 	//BLIP Sprite for nr1=17, nr9=25
 	RADAR::SET_BLIP_SPRITE(blipId, 16 + slotIndex,false);
-
+	*/
 	//Store current waypoint
 	if (RADAR::IS_WAYPOINT_ACTIVE()) {
-		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+		Blip waypointID = RADAR::GET_MAIN_PLAYER_BLIP_ID();
 		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		actors[slotIndex-1].setWaypoint(waypointCoord);
 		actors[slotIndex - 1].setHasWaypoint(true);
@@ -2846,7 +2847,7 @@ void action_save_actors() {
 			sprintf(strHash, "%lu", pedModelHash);
 			actorElement->SetAttribute("pedModelHash", strHash);
 			//actorElement->SetAttribute("pedModelHash", std::to_string(pedModelHash).c_str());
-
+			/* TODO RDR identify other natives
 			for (int i = 0; i <= 11; i++) {
 				int drawableVar = PED::GET_PED_DRAWABLE_VARIATION(actorPed, i);
 				int textureVar = PED::GET_PED_TEXTURE_VARIATION(actorPed, i);
@@ -2865,6 +2866,7 @@ void action_save_actors() {
 				actorElement->SetAttribute(("propVariation" + std::to_string(i)).c_str(), propVar);
 				actorElement->SetAttribute(("propTextureVariation" + std::to_string(i)).c_str(), propTextureVar);
 			}
+			*/
 
 			rootElement->InsertEndChild(actorElement);
 		}
@@ -2922,8 +2924,10 @@ void action_load_actors() {
 			int drawableVar = std::stoi(strDrawableVar);
 			int textureVar = std::stoi(strTextureVar);
 			int paletteVar = std::stoi(strPaletteVar);
-				
+			
+			/*TODO RDR identify other native
 			PED::SET_PED_COMPONENT_VARIATION(newActorPed, i, drawableVar, textureVar, paletteVar);
+			*/
 		}
 
 		log_to_file("Setting ped props");
@@ -2934,8 +2938,9 @@ void action_load_actors() {
 
 			int propVar = std::stoi(strPropVar);
 			int propTextureVar = std::stoi(strPropTextureVar);
-
+			/*TODO RDR identify other native
 			PED::SET_PED_PROP_INDEX(newActorPed, i, propVar, propTextureVar, 2);
+			*/
 		}
 
 		//to force overwrite of any existing actor in ad_ped_to_slot
@@ -3437,7 +3442,7 @@ void action_autopilot_for_player(bool suppressMessage) {
 	Actor & actor = get_actor_from_ped(PLAYER::PLAYER_PED_ID());
 	//update the waypoint if one is set currently
 	if (actor.isNullActor()==false && RADAR::IS_WAYPOINT_ACTIVE()) {
-		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+		Blip waypointID = RADAR::GET_MAIN_PLAYER_BLIP_ID();
 		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		actor.setWaypoint(waypointCoord);
 		actor.setHasWaypoint(true);
@@ -3493,7 +3498,7 @@ void action_autopilot_for_player(bool suppressMessage) {
 
 void action_set_same_waypoint_for_all_actors() {
 	if (RADAR::IS_WAYPOINT_ACTIVE()) {
-		int waypointID = UI::GET_FIRST_BLIP_INFO_ID(UI::_GET_BLIP_INFO_ID_ITERATOR());
+		Blip waypointID = RADAR::GET_MAIN_PLAYER_BLIP_ID();
 		Vector3 waypointCoord = RADAR::GET_BLIP_COORDS(waypointID);
 		log_to_file("action_set_same_waypoint_for_all_actors x:" + std::to_string(waypointCoord.x)+ " y:" + std::to_string(waypointCoord.y) + " z:" + std::to_string(waypointCoord.z));
 
@@ -5716,7 +5721,8 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 					else {
 						//check for a scenario. Only apply if it's the first scenario or a new one
 						//TODO RDR2 https://github.com/elsewhat/rdr2-mod-scene-director/issues/17
-						if (PED::IS_PED_USING_ANY_SCENARIO(actorPed) && (isActorUsingScenario == false || PED::IS_PED_USING_SCENARIO(actorPed, currentScenario.name) == false)) {
+						/*
+						if (PED::IS_PED_USING_ANY_SCENARIO(actorPed) && (isActorUsingScenario == false || AI::IS_PED_ACTIVE_IN_SCENARIO(actorPed, currentScenario.name) == false)) {
 							DELTA_TICKS = 500;
 							isActorUsingScenario = true;
 							//find scenario in use
@@ -5735,9 +5741,9 @@ void action_record_scene_for_actor(bool replayOtherActors) {
 							actorRecording.push_back(ongoingActorScenarioRecordingItem);
 							log_to_file(recordingItem.toString());
 
-
+							
 						}
-						else if (PED::IS_PED_USING_ANY_SCENARIO(actorPed)) {
+						else*/ if (PED::IS_PED_USING_ANY_SCENARIO(actorPed)) {
 							DELTA_TICKS = 500;
 							log_to_file("action_record_scene_for_actor: Ped is still using the same scenario");
 						}
@@ -6299,7 +6305,7 @@ void action_copy_player_actions() {
 					}
 					nextWaitTicks = 100;
 				}
-
+				/*TODO RDR: Find alternative
 				//Copy scenarios applied to player to other actors
 				//No way of retrieving which scenario is active, so we have to brute force it over the 458 scenarios which exist
 				if (PED::IS_PED_USING_ANY_SCENARIO(playerPed)) {
@@ -6344,8 +6350,9 @@ void action_copy_player_actions() {
 						}
 					}
 				}
+				*/
 
-
+				/* TODO RDR: Find alternative to IS_PED_ARMED
 				//check if the player is armed
 				if (WEAPON::IS_PED_ARMED(playerPed, 6)) {
 					Hash currentWeapon;
@@ -6366,6 +6373,7 @@ void action_copy_player_actions() {
 						}
 					}
 				}
+				*/
 
 				//check if the player is aiming or firing
 				if (PLAYER::IS_PLAYER_FREE_AIMING(PLAYER::PLAYER_ID())) {
@@ -6888,8 +6896,6 @@ void ScriptMain()
 
 	//make sure police and everyone do not ignore player
 	reset_ignore_player();
-
-	testRequest();
 
 	main();
 }

@@ -144,15 +144,15 @@ void ActorRecordingItem::drawMarkerForRecording(bool isCurrent, bool showDisable
 			colorR = 255;
 			colorG = 255;
 			colorB = 255;
-			GRAPHICS::DRAW_MARKER(1, m_location.x, m_location.y, m_location.z, 0.0f, 0.0f, 0.0f, 180.0f, 0.0f, 0.0f, 0.75f, 0.75f, 0.75f, colorR, colorG, colorB, 100, false, true, 2, false, false, false, false);
+			//GRAPHICS::DRAW_MARKER(1, m_location.x, m_location.y, m_location.z, 0.0f, 0.0f, 0.0f, 180.0f, 0.0f, 0.0f, 0.75f, 0.75f, 0.75f, colorR, colorG, colorB, 100, false, true, 2, false, false, false, false);
 		}
 	}
 	else {
 		if (isCurrent) {
-			GRAPHICS::DRAW_MARKER(2, m_location.x, m_location.y, m_location.z, 0.0f, 0.0f, 0.0f, 180.0f, 0.0f, 0.0f, 0.75f, 0.75f, 0.75f, colorR, colorG, colorB, 100, false, true, 2, false, false, false, false);
+			//GRAPHICS::DRAW_MARKER(2, m_location.x, m_location.y, m_location.z, 0.0f, 0.0f, 0.0f, 180.0f, 0.0f, 0.0f, 0.75f, 0.75f, 0.75f, colorR, colorG, colorB, 100, false, true, 2, false, false, false, false);
 		}
 		else {
-			GRAPHICS::DRAW_MARKER(1, m_location.x, m_location.y, m_location.z, 0.0f, 0.0f, 0.0f, 180.0f, 0.0f, 0.0f, 0.75f, 0.75f, 0.75f, colorR, colorG, colorB, 100, false, true, 2, false, false, false, false);
+			//GRAPHICS::DRAW_MARKER(1, m_location.x, m_location.y, m_location.z, 0.0f, 0.0f, 0.0f, 180.0f, 0.0f, 0.0f, 0.75f, 0.75f, 0.75f, colorR, colorG, colorB, 100, false, true, 2, false, false, false, false);
 		}
 	}
 
@@ -964,7 +964,7 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 
 	if (PED::IS_PED_IN_ANY_VEHICLE(actor.getActorPed(), 0)) {
 		//TODO RDR2: https://github.com/elsewhat/rdr2-mod-scene-director/issues/19
-		PED::SET_PED_SHOOTS_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1);
+		//PED::SET_PED_SHOOTS_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1);
 		AI::TASK_AIM_GUN_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1000, 1, 1);
 	}
 	else {
@@ -978,7 +978,7 @@ void ActorShootAtByImpactRecordingItem::executeNativesForRecording(Actor actor, 
 			PED::SET_PED_DESIRED_HEADING(actor.getActorPed(), m_heading);
 		}
 
-		PED::SET_PED_SHOOTS_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1);
+		//PED::SET_PED_SHOOTS_AT_COORD(actor.getActorPed(), m_weaponImpact.x, m_weaponImpact.y, m_weaponImpact.z, 1);
 	}
 
 
