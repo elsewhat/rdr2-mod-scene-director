@@ -20,6 +20,10 @@
     <ClCompile Include="SyncedAnimation.cpp" />
     <ClCompile Include="GTAObject.cpp" />
     <ClCompile Include="StageLight.cpp" />
+    <ClCompile Include="third-party\minhook\src\hde\hde64.c" />
+    <ClCompile Include="third-party\minhook\src\buffer.c" />
+    <ClCompile Include="third-party\minhook\src\hook.c" />
+    <ClCompile Include="third-party\minhook\src\trampoline.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scripthook\inc\enums.h">
@@ -57,6 +61,13 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="scripthook\inc\nativeCaller.h" />
+    <ClInclude Include="third-party\CMemory.h" />
+    <ClInclude Include="third-party\minhook\include\MinHook.h" />
+    <ClInclude Include="third-party\minhook\src\hde\hde64.h" />
+    <ClInclude Include="third-party\minhook\src\hde\pstdint.h" />
+    <ClInclude Include="third-party\minhook\src\hde\table64.h" />
+    <ClInclude Include="third-party\minhook\src\buffer.h" />
+    <ClInclude Include="third-party\minhook\src\trampoline.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

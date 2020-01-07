@@ -23,11 +23,16 @@
     <ClCompile Include="script.cpp" />
     <ClCompile Include="StageLight.cpp" />
     <ClCompile Include="SyncedAnimation.cpp" />
+    <ClCompile Include="third-party\minhook\src\buffer.c" />
+    <ClCompile Include="third-party\minhook\src\hde\hde64.c" />
+    <ClCompile Include="third-party\minhook\src\hook.c" />
+    <ClCompile Include="third-party\minhook\src\trampoline.c" />
     <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="weather.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="third-party\CMemory.h" />
     <ClInclude Include="scripthook\inc\nativeCaller.h" />
     <ClInclude Include="scripthook\inc\natives_patch.h" />
     <ClInclude Include="scripthook\inc\main.h" />
@@ -50,6 +55,12 @@
     <ClInclude Include="script.h" />
     <ClInclude Include="StageLight.h" />
     <ClInclude Include="SyncedAnimation.h" />
+    <ClInclude Include="third-party\minhook\include\MinHook.h" />
+    <ClInclude Include="third-party\minhook\src\buffer.h" />
+    <ClInclude Include="third-party\minhook\src\hde\hde64.h" />
+    <ClInclude Include="third-party\minhook\src\hde\pstdint.h" />
+    <ClInclude Include="third-party\minhook\src\hde\table64.h" />
+    <ClInclude Include="third-party\minhook\src\trampoline.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="weather.h" />
